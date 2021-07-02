@@ -7,6 +7,8 @@ public final class Search {
     private static final int startPosX = 2;
     private static final int startPosY = 2;
 
+    // What to write in commit messages: It's much better to write why. Not what. What can already be seen in the code.
+
 
     // get all possible Knigth moves to Squares from a given Square
     // important: Map does not consider visited squares. This logic has to be handled seperately.
@@ -18,7 +20,7 @@ public final class Search {
     /*
         Here I'm going to put all the fields the knight has visited.
      */
-    private Queue<Square> walkedPath = new LinkedList<>();
+    public Queue<Square> walkedPath = new LinkedList<>();
 
     public Search() {
         init();
@@ -35,7 +37,6 @@ public final class Search {
             Square square = new Square(startPosX,startPosY);
             walkedPath.add(square);
             List<Square> candidates = filterVisitedSquares(map.get(square));
-            candidates = candidates.stream().filter(el -> walkedPath.contains(el)).collect(Collectors.toList());
 
         }
 
@@ -61,7 +62,9 @@ Else
     }
 
     public List<Square> filterVisitedSquares(List<Square> candidates) {
-    return null;
+
+        return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
+
     }
 
     public boolean foundSolution() {
@@ -113,5 +116,9 @@ Else
 
         }
         return boardString;
+    }
+
+    public Map<Square, List<Square>> getMap() {
+        return map;
     }
 }
