@@ -1,30 +1,39 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.System.exit;
+
 public final class Search {
-    private static final int BOARD_LEN = 8;
+    private  final int BOARD_LEN;
     private  final int startPosX;
     private  final int startPosY;
 
     // What to write in commit messages: It's much better to write why. Not what. What can already be seen in the code.
 
 
-    // get all possible Knigth moves to Squares from a given Square
+    // get all possible Knight moves to Squares from a given Square
     // important: Map does not consider visited squares. This logic has to be handled seperately.
     private final Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
 
     // I want to keep this to pretty print the Board
-    private final int[][] board = new int[BOARD_LEN][BOARD_LEN];
+    private final int[][] board;
 
     /*
         Here I'm going to put all the fields the knight has visited.
      */
-
-
-    public Search(final int startPosX, final int startPosY) {
+    public Search(final int startPosX, final int startPosY, final int BOARDSIZE)  {
         this.startPosX = startPosX;
         this.startPosY = startPosY;
+        this.BOARD_LEN = BOARDSIZE;
+        this.board = new int[BOARD_LEN][BOARD_LEN];
         init();
+    }
+
+    public Search(final int startPosX, final int startPosY)  {
+        this(startPosX, startPosY, 5);
     }
 
     public void startSearch() throws Exception {
@@ -37,39 +46,47 @@ public final class Search {
     }
 
     // Quite possibly, it's necessary to pass walkedPath as an Argument, when using recursion
-
+    // could use a Priority Queue or something like that
+    // for example filter Squares based on the criteria, how many onward moves are possible
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
-        if (foundSolution(board)) {
-            System.out.println("found Solution!");
+        if (theWalkedPath.size() == (BOARD_LEN*BOARD_LEN)) {
+            System.out.println("found Solution! " + '\n' + theWalkedPath.toString());
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
+            exit(0);
             return true;
         } else {
-            System.out.println(theWalkedPath.toString());
+           // System.out.println(theWalkedPath.toString());
             Square nextSquare = theWalkedPath.peek(); // the Last made moves
             if (hasDuplicates(theWalkedPath)) {
 
                 throw new Exception("spotted duplicates:\n " + getDuplicates(theWalkedPath));
             }
-            List<Square> candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
+            List<Square> candidates;
 
-            // could use a Priority Queue or something like that
-            // for example filter Squares based on the criteria, how many onward moves are possible
+            if (theWalkedPath.size() == 1) {
+                candidates =  map.get(nextSquare); // the first time, everything is possible.
+            } else {
+                candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
+            }
 
             candidates.forEach( possibleMove -> {
                 theWalkedPath.add(possibleMove);
-                board[nextSquare.getX()][nextSquare.getY()] = 1;
-
+                board[theWalkedPath.peek().getX()][theWalkedPath.peek().getY()] = 1;
                 try {
                     findTour(theWalkedPath);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                board[theWalkedPath.peek().getX()][theWalkedPath.peek().getY()] = 0;
+                // theWalkedPath().peek() == possibleMove;
+                theWalkedPath.remove(theWalkedPath.peek());
+                candidates.remove(theWalkedPath.peek());
 
-                theWalkedPath.remove(nextSquare);
-                board[nextSquare.getX()][nextSquare.getY()] = 0;
             });
+
+
             return false; // only way to get here is if all the moves failed
 
         }
@@ -167,6 +184,9 @@ Else
             if (x >= 0 && y >= 0 && x < BOARD_LEN && y < BOARD_LEN) {
                 possibleFields.add(new Square(x, y));
             }
+        }
+        if (p == 1 && q == 4) {
+            System.out.println(possibleFields);
         }
         map.put(new Square(p, q), possibleFields);
     }
