@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public final class Search {
@@ -7,34 +8,36 @@ public final class Search {
     private static final int startPosY = 2;
 
 
-    // 00 -> possibleFields
-    // important: Map does not consider visited squares
-    private final Map<Integer[], List<List<Integer>>> map = new HashMap<>(); // maps coordinate to List of possible moves
+    // get all possible Knigth moves to Squares from a given Square
+    // important: Map does not consider visited squares. This logic has to be handled seperately.
+    private Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
 
     // I want to keep this to pretty print the Board
     private final int[][] board = new int[BOARD_LEN][BOARD_LEN];
 
-
-
     /*
         Here I'm going to put all the fields the knight has visited.
      */
-    private Queue<Integer[]> walkedPath = new LinkedList<>();
+    private Queue<Square> walkedPath = new LinkedList<>();
 
     public Search() {
         init();
         findTour();
     }
+
+    // Quite possibly, it's necessary to pass walkedPath as an Argument, when using recursion
     public boolean findTour() {
+
         if (foundSolution()) {
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
-
-
         } else {
+            Square square = new Square(startPosX,startPosY);
+            walkedPath.add(square);
+            List<Square> candidates = filterVisitedSquares(map.get(square));
+            candidates = candidates.stream().filter(el -> walkedPath.contains(el)).collect(Collectors.toList());
 
         }
-        walkedPath.add(new Integer[]{3,2});
 
 
         /*
@@ -55,6 +58,10 @@ Else
 
          */
         return false;
+    }
+
+    public List<Square> filterVisitedSquares(List<Square> candidates) {
+    return null;
     }
 
     public boolean foundSolution() {
@@ -79,7 +86,8 @@ Else
      * @param q 0-based Y-coordinate
      */
     public void allPossibleMoves(int p, int q) {
-        List<List<Integer>> possibleFields = new ArrayList<>();
+        List<Square> possibleFields = new ArrayList<>();
+
         int[] X = {2, 1, -1, -2, -2, -1, 1, 2};
         int[] Y = {1, 2, 2, 1, -1, -2, -2, -1};
         // Check if each possible move is valid or not
@@ -89,23 +97,18 @@ Else
             int y = q + Y[i];
             // count valid moves
             if (x >= 0 && y >= 0 && x < BOARD_LEN && y < BOARD_LEN) {
-                List<Integer> list = new ArrayList<>();
-                list.add(x);
-                list.add(y);
-                possibleFields.add(list);
+                possibleFields.add(new Square(x, y));
             }
         }
-        Integer[] key = {p,q};
-
-        map.put(key, possibleFields);
+        map.put(new Square(p, q), possibleFields);
     }
 
     public String[][] convertIntToStringArray(int[][] input) {
-        String boardString[][] = new String[BOARD_LEN][BOARD_LEN];
+        String[][] boardString = new String[BOARD_LEN][BOARD_LEN];
 
         for (int i = 0; i < input.length; i++) {
-            for ( int j = 0; j < input[i].length; i++) {
-                boardString[i][j] = String.valueOf(input[i][j]);
+            for ( int j = 0; j < input[i].length; j++) {
+                boardString[i][j] = " " + String.valueOf(input[i][j]) + " ";
             }
 
         }
