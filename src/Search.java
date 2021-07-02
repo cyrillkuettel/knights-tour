@@ -20,23 +20,37 @@ public final class Search {
     /*
         Here I'm going to put all the fields the knight has visited.
      */
-    public Queue<Square> walkedPath = new LinkedList<>();
+    public Stack<Square> walkedPath = new Stack<>();
 
     public Search() {
         init();
-        findTour();
+        walkedPath.add(new Square(startPosX, startPosY));
+        findTour(walkedPath);
     }
 
     // Quite possibly, it's necessary to pass walkedPath as an Argument, when using recursion
-    public boolean findTour() {
 
-        if (foundSolution()) {
+    public boolean findTour(Stack<Square> theWalkedPath) {
+
+        if (foundSolution(board)) {
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
+            return true;
         } else {
-            Square square = new Square(startPosX,startPosY);
-            walkedPath.add(square);
-            List<Square> candidates = filterVisitedSquares(map.get(square));
+            Square nextSquare = theWalkedPath.peek();
+            board[nextSquare.getX()][nextSquare.getY()] = 1; // set to visited
+            List<Square> candidates = filterVisitedSquares(map.get(nextSquare));
+
+            // could use a Priority Queue or something like that
+            // for example filter Squares based on the criteria, how many onward moves are possible
+
+            candidates.forEach( possibleMove -> {
+                theWalkedPath.add(possibleMove);
+                findTour(theWalkedPath);
+                theWalkedPath.remove(nextSquare);
+                board[nextSquare.getX()][nextSquare.getY()] = 1;
+            });
+            return false; // only way to get here is if all the moves failed
 
         }
 
@@ -58,7 +72,7 @@ Else
    returned by the initial call of recursion then "no solution exists" )
 
          */
-        return false;
+
     }
 
     public List<Square> filterVisitedSquares(List<Square> candidates) {
@@ -67,7 +81,7 @@ Else
 
     }
 
-    public boolean foundSolution() {
+    public boolean foundSolution(final int[][] board) {
         return Arrays.stream(board).flatMapToInt(Arrays::stream).allMatch(n -> (n == 1));
     }
 
@@ -118,7 +132,15 @@ Else
         return boardString;
     }
 
+    // used for Tests
+
+    public int[][] getBoard() {
+        return board;
+    }
+
     public Map<Square, List<Square>> getMap() {
         return map;
     }
+
+
 }

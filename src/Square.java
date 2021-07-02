@@ -7,6 +7,15 @@ public final class Square {
         this.y = y;
     }
 
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     @Override
     public boolean equals(Object object) {
 

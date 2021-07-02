@@ -1,6 +1,8 @@
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
+
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -31,6 +33,17 @@ public class SearchTest {
         Assertions.assertEquals(2, candidates.size());
 
 
+
+    }
+
+    @Test
+    public void testfoundSolution() {
+        search = new Search();
+        int[][] board = search.getBoard();
+        for (int[] arr : board) {
+            Arrays.fill(arr, 1);
+        }
+        Assertions.assertTrue(search.foundSolution(board));
 
     }
 
