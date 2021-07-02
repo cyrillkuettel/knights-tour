@@ -1,23 +1,41 @@
 import java.util.*;
+import java.util.stream.IntStream;
+
 public final class Search {
     private static final int BOARD_LEN = 8;
+    private static final int startPosX = 2;
+    private static final int startPosY = 2;
+
 
     // 00 -> possibleFields
-    private final Map<Integer, List<List<Integer>>> map = new HashMap<>(); // maps coordinate to List of possible moves
-    private int[][] board = new int[BOARD_LEN][BOARD_LEN];
+    // important: Map does not consider visited squares
+    private final Map<Integer[], List<List<Integer>>> map = new HashMap<>(); // maps coordinate to List of possible moves
+
+    // I want to keep this to pretty print the Board
+    private final int[][] board = new int[BOARD_LEN][BOARD_LEN];
 
 
+
+    /*
+        Here I'm going to put all the fields the knight has visited.
+     */
+    private Queue<Integer[]> walkedPath = new LinkedList<>();
 
     public Search() {
-        Arrays.fill(board, 0);
         init();
+        findTour();
     }
-
-
     public boolean findTour() {
         if (foundSolution()) {
+            PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
+            prettyPrinter.print(convertIntToStringArray(board));
+
+
+        } else {
 
         }
+        walkedPath.add(new Integer[]{3,2});
+
 
         /*
         If all squares are visited
@@ -53,13 +71,12 @@ Else
                 allPossibleMoves(i, j);
             }
         }
-        System.out.println(new PrettyPrintingMap<Integer, List<List<Integer>>>(map));
     }
 
     /**
      * Calculcates all Legal Knight moves from a given position
-     * @param p
-     * @param q
+     * @param p 0-based X-coordinate
+     * @param q 0-based Y-coordinate
      */
     public void allPossibleMoves(int p, int q) {
         List<List<Integer>> possibleFields = new ArrayList<>();
@@ -78,7 +95,20 @@ Else
                 possibleFields.add(list);
             }
         }
-        int key = Integer.valueOf(String.valueOf(p) + String.valueOf(q));
+        Integer[] key = {p,q};
+
         map.put(key, possibleFields);
+    }
+
+    public String[][] convertIntToStringArray(int[][] input) {
+        String boardString[][] = new String[BOARD_LEN][BOARD_LEN];
+
+        for (int i = 0; i < input.length; i++) {
+            for ( int j = 0; j < input[i].length; i++) {
+                boardString[i][j] = String.valueOf(input[i][j]);
+            }
+
+        }
+        return boardString;
     }
 }
