@@ -19,6 +19,8 @@ public final class Square {
     @Override
     public boolean equals(Object object) {
 
+        // very important: equals comes down to Values
+
         if (!(object instanceof Square)) {
             return false;
         }

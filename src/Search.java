@@ -1,18 +1,17 @@
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public final class Search {
     private static final int BOARD_LEN = 8;
-    private static final int startPosX = 2;
-    private static final int startPosY = 2;
+    private  final int startPosX;
+    private  final int startPosY;
 
     // What to write in commit messages: It's much better to write why. Not what. What can already be seen in the code.
 
 
     // get all possible Knigth moves to Squares from a given Square
     // important: Map does not consider visited squares. This logic has to be handled seperately.
-    private Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
+    private final Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
 
     // I want to keep this to pretty print the Board
     private final int[][] board = new int[BOARD_LEN][BOARD_LEN];
@@ -20,35 +19,56 @@ public final class Search {
     /*
         Here I'm going to put all the fields the knight has visited.
      */
-    public Stack<Square> walkedPath = new Stack<>();
 
-    public Search() {
+
+    public Search(final int startPosX, final int startPosY) {
+        this.startPosX = startPosX;
+        this.startPosY = startPosY;
         init();
-        walkedPath.add(new Square(startPosX, startPosY));
+    }
+
+    public void startSearch() throws Exception {
+        Square startSquare = new Square(startPosX, startPosY);
+        Stack<Square> walkedPath = new Stack<>();
+        walkedPath.add(startSquare);
+        board[startSquare.getX()][startSquare.getY()] = 1;
         findTour(walkedPath);
+
     }
 
     // Quite possibly, it's necessary to pass walkedPath as an Argument, when using recursion
 
-    public boolean findTour(Stack<Square> theWalkedPath) {
+    public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (foundSolution(board)) {
+            System.out.println("found Solution!");
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
             return true;
         } else {
-            Square nextSquare = theWalkedPath.peek();
-            board[nextSquare.getX()][nextSquare.getY()] = 1; // set to visited
-            List<Square> candidates = filterVisitedSquares(map.get(nextSquare));
+            System.out.println(theWalkedPath.toString());
+            Square nextSquare = theWalkedPath.peek(); // the Last made moves
+            if (hasDuplicates(theWalkedPath)) {
+
+                throw new Exception("spotted duplicates:\n " + getDuplicates(theWalkedPath));
+            }
+            List<Square> candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
 
             // could use a Priority Queue or something like that
             // for example filter Squares based on the criteria, how many onward moves are possible
 
             candidates.forEach( possibleMove -> {
                 theWalkedPath.add(possibleMove);
-                findTour(theWalkedPath);
-                theWalkedPath.remove(nextSquare);
                 board[nextSquare.getX()][nextSquare.getY()] = 1;
+
+                try {
+                    findTour(theWalkedPath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                theWalkedPath.remove(nextSquare);
+                board[nextSquare.getX()][nextSquare.getY()] = 0;
             });
             return false; // only way to get here is if all the moves failed
 
@@ -75,7 +95,37 @@ Else
 
     }
 
-    public List<Square> filterVisitedSquares(List<Square> candidates) {
+    /**
+     * returns duplicates in a stack
+     * @param walkedPath Stack which supposedly contains duplicates
+     */
+    private String getDuplicates(Stack<Square> walkedPath)
+    {
+        final Set<Square> setToReturn = new HashSet<>();
+        final Set<Square> set1 = new HashSet<>();
+
+        for (Square yourInt : walkedPath)
+        {
+            if (!set1.add(yourInt))
+            {
+                setToReturn.add(yourInt);
+            }
+        }
+        return setToReturn.toString();
+    }
+
+    public boolean hasDuplicates(Stack<Square> stack) {
+        Set<Square> set = new HashSet<>();
+        for (Square each : stack) {
+            if (!set.add(each)) {
+                return true; // set.add returns false if the size of set did not change
+            }
+        }
+        return false;
+    }
+
+
+    public List<Square> filterVisitedSquares(List<Square> candidates, Stack<Square> walkedPath) {
 
         return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
 
@@ -85,10 +135,11 @@ Else
         return Arrays.stream(board).flatMapToInt(Arrays::stream).allMatch(n -> (n == 1));
     }
 
-    public static void main(String[] args) {
-        new Search();
-    }
 
+
+    /**
+     * Initialize the map. This is always the same
+     */
     public void init() {
         for (int i = 0; i < BOARD_LEN; i++) {
             for (int j = 0; j < BOARD_LEN; j++) {
