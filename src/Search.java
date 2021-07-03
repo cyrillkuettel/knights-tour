@@ -1,6 +1,8 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.System.exit;
+
 public final class Search {
     private  final int BOARD_LEN;
     private  final int startPosX;
@@ -10,7 +12,7 @@ public final class Search {
 
 
     // get all possible Knight moves to Squares from a given Square
-    // important: Map does not consider visited squares. This logic has to be handled seperately.
+    // important: Map does not consider visited squares. This logic has to be handled separately.
     private final Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
 
     // I want to keep this to pretty print the Board
@@ -36,7 +38,11 @@ public final class Search {
         Stack<Square> walkedPath = new Stack<>();
         walkedPath.add(startSquare);
         board[startSquare.getX()][startSquare.getY()] = 1;
+        long start = System.currentTimeMillis();
         findTour(walkedPath);
+        long end = System.currentTimeMillis();
+        System.out.println("Total time of computation: %d ".format(String.valueOf(end - start)));
+
 
     }
 
@@ -49,10 +55,10 @@ public final class Search {
             System.out.println("found Solution! " + '\n' + theWalkedPath.toString());
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
-            // exit(0);
+            exit(0); // only search one Solution
             return true;
         } else {
-           // System.out.println(theWalkedPath.toString());
+           System.out.println(theWalkedPath.toString());
             Square nextSquare = theWalkedPath.peek(); // the Last made moves
             if (hasDuplicates(theWalkedPath)) {
 
@@ -65,6 +71,13 @@ public final class Search {
             } else {
                 candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
             }
+            /*
+                  the idea to massively improve this:
+                  filterVisitedSquares() returns a PriorityQueue with Custom Comparator.
+                  instead of forEach, Loop through Queue
+                  (get the highest priority element first)
+
+             */
 
             candidates.forEach( possibleMove -> {
                 theWalkedPath.add(possibleMove);
