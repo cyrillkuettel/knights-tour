@@ -1,4 +1,4 @@
-public final class Square {
+public final class Square implements Comparable<Square> {
     private final int x;
     private final int y;
 
@@ -40,5 +40,14 @@ public final class Square {
     @Override
     public String toString() {
         return "[" + String.valueOf(x) + " " + String.valueOf(y) + "] ";
+    }
+
+    @Override
+    public int compareTo(Square other) {
+        int sum = this.x + this.y;
+        int sumOther = other.x+other.y;
+
+        return Integer.compare(sum, sumOther);
+
     }
 }

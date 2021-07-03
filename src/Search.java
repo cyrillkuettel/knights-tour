@@ -1,8 +1,6 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.lang.System.exit;
-
 public final class Search {
     private  final int BOARD_LEN;
     private  final int startPosX;
@@ -26,7 +24,7 @@ public final class Search {
         this.startPosY = startPosY;
         this.BOARD_LEN = BOARDSIZE;
         this.board = new int[BOARD_LEN][BOARD_LEN];
-        init();
+        initPossibleMoves();
     }
 
     public Search(final int startPosX, final int startPosY)  {
@@ -154,7 +152,7 @@ Else
     /**
      * Initialize the map. This is always the same
      */
-    public void init() {
+    public void initPossibleMoves() {
         for (int i = 0; i < BOARD_LEN; i++) {
             for (int j = 0; j < BOARD_LEN; j++) {
                 allPossibleMoves(i, j);
@@ -167,13 +165,13 @@ Else
      * @param p 0-based X-coordinate
      * @param q 0-based Y-coordinate
      */
-    public void allPossibleMoves(int p, int q) {
+    public List<Square> allPossibleMoves(int p, int q) {
         List<Square> possibleFields = new ArrayList<>();
 
         int[] X = {2, 1, -1, -2, -2, -1, 1, 2};
         int[] Y = {1, 2, 2, 1, -1, -2, -2, -1};
         // Check if each possible move is valid or not
-        for (int i = 0; i < BOARD_LEN; i++) {
+        for (int i = 0; i < X.length; i++) {
             // Position of knight after move
             int x = p + X[i];
             int y = q + Y[i];
@@ -182,10 +180,8 @@ Else
                 possibleFields.add(new Square(x, y));
             }
         }
-        if (p == 1 && q == 4) {
-            System.out.println(possibleFields);
-        }
         map.put(new Square(p, q), possibleFields);
+        return possibleFields;
     }
 
     public String[][] convertIntToStringArray(int[][] input) {
