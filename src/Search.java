@@ -54,7 +54,7 @@ public final class Search {
             System.out.println("found Solution! " + '\n' + theWalkedPath.toString());
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
-            exit(0);
+            // exit(0);
             return true;
         } else {
            // System.out.println(theWalkedPath.toString());
@@ -144,7 +144,7 @@ Else
 
     public List<Square> filterVisitedSquares(List<Square> candidates, Stack<Square> walkedPath) {
 
-        return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
+        return candidates.parallelStream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
 
     }
 
