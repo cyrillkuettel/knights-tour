@@ -43,7 +43,7 @@ private final int BOARD_LEN;
         JFrame jf=new JFrame();
         jf.setSize(700, 700);
         jf.setTitle("Draw Chess Board");
-        jf.getContentPane().add(new ChessBoard(board_len));
+        jf.getContentPane().add(new ChessBoard(8));
         jf.setLocationRelativeTo(null);
         jf.setBackground(Color.WHITE);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
