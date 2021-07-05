@@ -7,12 +7,30 @@ public final class Search {
     private  final int startPosX;
     private  final int startPosY;
 
-    // What to write in commit messages: It's much better to write why. Not what. What can already be seen in the code.
+    public class SquareMovesComparator implements Comparator<Square> {
 
 
-    // get all possible Knight moves to Squares from a given Square
-    // important: Map does not consider visited squares. This logic has to be handled separately.
-    private final Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
+        @Override
+        public int compare(Square o1, Square o2) {
+            List<Square> square1_onward_moves = allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = allPossibleMoves(o2.getX(), o2.getY());
+
+
+            int len1 = square1_onward_moves.size();
+            int len2 = square2_onward_moves.size();
+            return Integer.compare(len1, len2);
+
+        }
+
+    }
+
+
+
+    /**
+     * Squares are ordered based on how many onward moves there are from a square. (The less, the better, the higher)
+     */
+    // PriorityQueue<Square> pqueue = new PriorityQueue<>(8, new SquareMovesComparator().reversed());
+    private static Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
 
     // I want to keep this to pretty print the Board
     private final int[][] board;
@@ -40,14 +58,15 @@ public final class Search {
         board[startSquare.getX()][startSquare.getY()] = 1;
         start = System.currentTimeMillis();
         findTour(walkedPath);
-
-
-
     }
+
+
+
 
     // Quite possibly, it's necessary to pass walkedPath as an Argument, when using recursion
     // could use a Priority Queue or something like that
     // for example filter Squares based on the criteria, how many onward moves are possible
+    boolean set = false;
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (theWalkedPath.size() == (BOARD_LEN*BOARD_LEN)) {
@@ -55,42 +74,44 @@ public final class Search {
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntToStringArray(board));
             long end = System.currentTimeMillis();
-            System.out.println("Total time of computation: %d ".format(String.valueOf(end - start)));
+            System.out.format("Total time of computation: %d ms", (end - start));
 
-            exit(0); // only search one Solution
+            //exit(0); // only search one Solution
             return true;
         } else {
-           System.out.println(theWalkedPath.toString());
-            Square nextSquare = theWalkedPath.peek(); // the Last made moves
+           //System.out.println(theWalkedPath);
+            Square nextSquare = theWalkedPath.peek(); // the latest move.
             if (hasDuplicates(theWalkedPath)) {
 
                 throw new Exception("spotted duplicates:\n " + getDuplicates(theWalkedPath));
             }
+           // PriorityQueue<Square> candidates = new PriorityQueue<>(8, new SquareMovesComparator().reversed());
             List<Square> candidates;
 
             if (theWalkedPath.size() == 1) {
-                candidates =  map.get(nextSquare); // the first time, everything is possible.
+                candidates = map.get(nextSquare) ; // the first time, everything is possible.
+
             } else {
                 candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
             }
-            /*
-                  the idea to massively improve this:
-                  filterVisitedSquares() returns a PriorityQueue with Custom Comparator.
-                  instead of forEach, Loop through Queue
-                  (get the highest priority element first)
 
-             */
+            // Squares with less possible onward squares are at the beginning of the List
+            candidates.sort(new SquareMovesComparator());
 
             candidates.forEach( possibleMove -> {
+
                 theWalkedPath.add(possibleMove);
                 board[theWalkedPath.peek().getX()][theWalkedPath.peek().getY()] = 1;
+
                 try {
                     findTour(theWalkedPath);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 board[theWalkedPath.peek().getX()][theWalkedPath.peek().getY()] = 0;
                 // theWalkedPath().peek() == possibleMove;
+                // this actually works, I'm amazed.
                 theWalkedPath.remove(theWalkedPath.peek());
                 candidates.remove(theWalkedPath.peek());
 
@@ -103,6 +124,8 @@ public final class Search {
 
 
     }
+
+
 
     /**
      * returns duplicates in a stack
@@ -162,7 +185,7 @@ public final class Search {
      * @param p 0-based X-coordinate
      * @param q 0-based Y-coordinate
      */
-    public List<Square> allPossibleMoves(int p, int q) {
+    public  List<Square> allPossibleMoves(int p, int q) {
         List<Square> possibleFields = new ArrayList<>();
 
         int[] X = {2, 1, -1, -2, -2, -1, 1, 2};

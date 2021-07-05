@@ -1,11 +1,9 @@
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 
 public class SearchTest {
@@ -100,8 +98,75 @@ public class SearchTest {
     }
 
     @Test
+    public void testComparator() {
+        search = new Search(0,0,8);
+
+
+        List<Square> candidates = new ArrayList<>();
+
+        Square aLotOfMoves = new Square(3,3); // in the middle, there should be a lot of moves.
+        Square lessMoves = new Square(0,0);
+        candidates.add(aLotOfMoves);
+        candidates.add(lessMoves);
+
+        candidates.sort((o1, o2) -> {
+            List<Square> square1_onward_moves = search.allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = search.allPossibleMoves(o2.getX(), o2.getY());
+
+
+            int len1 = square1_onward_moves.size();
+            int len2 = square2_onward_moves.size();
+            return Integer.compare(len1, len2);
+
+        });
+
+        System.out.println(candidates.get(0));
+        Assertions.assertEquals(lessMoves, candidates.get(0));
+
+    }
+
+    @Test
+    public void testComparatorWithMoreSquares   () {
+        search = new Search(0,0,8);
+
+
+        List<Square> candidates = new ArrayList<>();
+
+        Square aLotOfMoves = new Square(3,3); // in the middle, there should be a lot of moves.
+        Square someMoves = new Square(2,2); // in the middle, there should be a lot of moves.
+        Square someMoves2 = new Square(2,3); // in the middle, there should be a lot of moves.
+        Square lessMoves = new Square(0,0);
+        Square AlsolessMoves = new Square(6,7);
+
+        candidates.add(aLotOfMoves);
+        candidates.add(lessMoves);
+        candidates.add(AlsolessMoves);
+        candidates.add(someMoves);
+        candidates.add(someMoves2);
+
+
+        candidates.sort((o1, o2) -> {
+            List<Square> square1_onward_moves = search.allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = search.allPossibleMoves(o2.getX(), o2.getY());
+
+
+            int len1 = square1_onward_moves.size();
+            int len2 = square2_onward_moves.size();
+            return Integer.compare(len1, len2);
+
+        });
+
+
+        Assertions.assertEquals(lessMoves, candidates.get(0));
+        candidates.remove(candidates.get(0));
+
+        Assertions.assertEquals(AlsolessMoves, candidates.get(0));
+
+    }
+
+    @Test
     public void testMap() {
-        search = new Search(0,0,5);
+        search = new Search(0,0,8);
         Stack<Square> walkedPath = new Stack<>();
         Square currentPos = new Square(1, 4);
         walkedPath.add(currentPos);
@@ -144,5 +209,6 @@ public class SearchTest {
         stack.add(new Square(1,2));
         Assertions.assertFalse(search.hasDuplicates(stack));
     }
+
 
 }
