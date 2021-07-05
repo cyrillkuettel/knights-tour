@@ -7,37 +7,11 @@ public final class Search {
     private  final int startPosX;
     private  final int startPosY;
 
-    public class SquareMovesComparator implements Comparator<Square> {
 
 
-        @Override
-        public int compare(Square o1, Square o2) {
-            List<Square> square1_onward_moves = allPossibleMoves(o1.getX(), o1.getY());
-            List<Square> square2_onward_moves = allPossibleMoves(o2.getX(), o2.getY());
-
-
-            int len1 = square1_onward_moves.size();
-            int len2 = square2_onward_moves.size();
-            return Integer.compare(len1, len2);
-
-        }
-
-    }
-
-
-
-    /**
-     * Squares are ordered based on how many onward moves there are from a square. (The less, the better, the higher)
-     */
-    // PriorityQueue<Square> pqueue = new PriorityQueue<>(8, new SquareMovesComparator().reversed());
     private static Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
-
-    // I want to keep this to pretty print the Board
     private final int[][] board;
 
-    /*
-        Here I'm going to put all the fields the knight has visited.
-     */
     public Search(final int startPosX, final int startPosY, final int BOARDSIZE)  {
         this.startPosX = startPosX;
         this.startPosY = startPosY;
@@ -47,7 +21,7 @@ public final class Search {
     }
 
     public Search(final int startPosX, final int startPosY)  {
-        this(startPosX, startPosY, 5);
+        this(startPosX, startPosY, 8);
     }
 
     long start;
@@ -55,53 +29,68 @@ public final class Search {
         Square startSquare = new Square(startPosX, startPosY);
         Stack<Square> walkedPath = new Stack<>();
         walkedPath.add(startSquare);
-        board[startSquare.getX()][startSquare.getY()] = 1;
+        board[startSquare.getX()][startSquare.getY()] = walkedPath.indexOf(startSquare);
         start = System.currentTimeMillis();
         findTour(walkedPath);
     }
 
+    /**
+     *  Squares are ordered based on how many onward moves there are from a square. (The less, the better,)
+     */
+    public class SquareMovesComparator implements Comparator<Square> {
+        @Override
+        public int compare(Square o1, Square o2) {
+            List<Square> square1_onward_moves = allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = allPossibleMoves(o2.getX(), o2.getY());
+            int len1 = square1_onward_moves.size();
+            int len2 = square2_onward_moves.size();
+            return Integer.compare(len1, len2);
+        }
+    }
 
 
-
-    // Quite possibly, it's necessary to pass walkedPath as an Argument, when using recursion
-    // could use a Priority Queue or something like that
-    // for example filter Squares based on the criteria, how many onward moves are possible
-    boolean set = false;
+    /**
+     *
+     * This is the Backtracking algorithm. If there is a tour, it will find the tour.
+     * It basically checks all moves, recursively starting a new search in every iteration.
+     * If a move does not lead to a solution, it removes the square from the path (Stack).
+     * @param theWalkedPath Behaves like a history. And as we all know, history is written by the winners.
+     * @return Solution to the knight's tour.
+     * @throws Exception Throws Exception if one square is present more than once.
+     */
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (theWalkedPath.size() == (BOARD_LEN*BOARD_LEN)) {
             System.out.println("found Solution! " + '\n' + theWalkedPath.toString());
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
-            prettyPrinter.print(convertIntToStringArray(board));
+            prettyPrinter.print(convertIntArrayToStringArray(board));
             long end = System.currentTimeMillis();
             System.out.format("Total time of computation: %d ms", (end - start));
 
-            //exit(0); // only search one Solution
+            exit(0); // only search one Solution
             return true;
         } else {
-           //System.out.println(theWalkedPath);
+           // System.out.println(theWalkedPath);
             Square nextSquare = theWalkedPath.peek(); // the latest move.
             if (hasDuplicates(theWalkedPath)) {
-
-                throw new Exception("spotted duplicates:\n " + getDuplicates(theWalkedPath));
-            }
-           // PriorityQueue<Square> candidates = new PriorityQueue<>(8, new SquareMovesComparator().reversed());
-            List<Square> candidates;
-
-            if (theWalkedPath.size() == 1) {
-                candidates = map.get(nextSquare) ; // the first time, everything is possible.
-
-            } else {
-                candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
+                throw new Exception("Fatal: spotted duplicates:\n" + getDuplicates(theWalkedPath));
             }
 
-            // Squares with less possible onward squares are at the beginning of the List
+            List<Square> candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
+
+            // Neat trick:
+            // prioritize moves with the lowest number of onward moves.
+            // After sorting, these moves are to be found at the beginning of the candidates List
+            // astonishing: this line improves performance a ten-fold, literally!
             candidates.sort(new SquareMovesComparator());
 
             candidates.forEach( possibleMove -> {
-
+                if (possibleMove == null) {
+                    System.out.println("got here");
+                    return; // this, surprisingly and unexpectedly only skips ONE Iteration.
+                }
                 theWalkedPath.add(possibleMove);
-                board[theWalkedPath.peek().getX()][theWalkedPath.peek().getY()] = 1;
+                board[possibleMove.getX()][possibleMove.getY()] = theWalkedPath.indexOf(possibleMove);
 
                 try {
                     findTour(theWalkedPath);
@@ -109,26 +98,16 @@ public final class Search {
                     e.printStackTrace();
                 }
 
-                board[theWalkedPath.peek().getX()][theWalkedPath.peek().getY()] = 0;
-                // theWalkedPath().peek() == possibleMove;
-                // this actually works, I'm amazed.
-                theWalkedPath.remove(theWalkedPath.peek());
-                candidates.remove(theWalkedPath.peek());
-
+                board[possibleMove.getX()][possibleMove.getY()] = 0;
+                theWalkedPath.remove(possibleMove);
+                possibleMove = null;
             });
-
-
-            return false; // only way to get here is if all the moves failed
-
+            return false; // if all the moves failed
         }
-
-
     }
 
-
-
     /**
-     * returns duplicates in a stack
+     * returns duplicates in a stack, if present.
      * @param walkedPath Stack which supposedly contains duplicates
      */
     private String getDuplicates(Stack<Square> walkedPath)
@@ -156,11 +135,14 @@ public final class Search {
         return false;
     }
 
-
+    /**
+     *
+     * @param candidates all legal moves from a given Square, without limitations.
+     * @param walkedPath history of moves, these moves should no longer be considered a valid option. (Because that's the point of knight's tour)
+     * @return candidates minus walkedPath
+     */
     public List<Square> filterVisitedSquares(List<Square> candidates, Stack<Square> walkedPath) {
-
         return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
-
     }
 
     public boolean foundSolution(final int[][] board) {
@@ -170,7 +152,7 @@ public final class Search {
 
 
     /**
-     * Initialize the map. This is always the same
+     *  It just calculates all 'L-Shapes' from a Square.
      */
     public void initPossibleMoves() {
         for (int i = 0; i < BOARD_LEN; i++) {
@@ -181,7 +163,7 @@ public final class Search {
     }
 
     /**
-     * Calculcates all Legal Knight moves from a given position
+     * Calculates all Legal Knight moves from a given position
      * @param p 0-based X-coordinate
      * @param q 0-based Y-coordinate
      */
@@ -204,20 +186,20 @@ public final class Search {
         return possibleFields;
     }
 
-    public String[][] convertIntToStringArray(int[][] input) {
+    public String[][] convertIntArrayToStringArray(int[][] input) {
         String[][] boardString = new String[BOARD_LEN][BOARD_LEN];
 
         for (int i = 0; i < input.length; i++) {
             for ( int j = 0; j < input[i].length; j++) {
                 boardString[i][j] = " " + String.valueOf(input[i][j]) + " ";
             }
-
         }
         return boardString;
     }
 
-    // used for Tests
 
+
+    // used for Tests
     public int[][] getBoard() {
         return board;
     }
@@ -225,6 +207,4 @@ public final class Search {
     public Map<Square, List<Square>> getMap() {
         return map;
     }
-
-
 }
