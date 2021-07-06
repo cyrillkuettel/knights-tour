@@ -74,7 +74,7 @@ public final class Search {
 
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
-        if (theWalkedPath.size() == (BOARD_LEN*BOARD_LEN)) {
+        if (foundSolution(theWalkedPath)) {
             System.out.println("found Solution! " + '\n' + theWalkedPath.toString());
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntArrayToStringArray(board));
@@ -178,8 +178,8 @@ public final class Search {
         return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
     }
 
-    public boolean foundSolution(final int[][] board) {
-        return Arrays.stream(board).flatMapToInt(Arrays::stream).allMatch(n -> (n == 1));
+    public boolean foundSolution(Stack<Square> theWalkedPath) {
+       return theWalkedPath.size() == (BOARD_LEN*BOARD_LEN);
     }
 
 

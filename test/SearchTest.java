@@ -181,16 +181,7 @@ public class SearchTest {
         Assertions.assertTrue(possibleMoves.contains(onlyAlternative1) && possibleMoves.contains(onlyAlternative2)
                                       && possibleMoves.contains(onlyAlternative3));
     }
-    @Test
-    public void testfoundSolution() {
-        search = new Search(0, 0);
-        int[][] board = search.getBoard();
-        for (int[] arr : board) {
-            Arrays.fill(arr, 1);
-        }
-        Assertions.assertTrue(search.foundSolution(board));
 
-    }
 
     @Test
     public void testHasDuplicates() {
