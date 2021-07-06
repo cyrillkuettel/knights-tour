@@ -1,4 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import static java.lang.System.exit;
 
@@ -42,6 +45,14 @@ public final class Search {
         public int compare(Square o1, Square o2) {
             List<Square> square1_onward_moves = allPossibleMoves(o1.getX(), o1.getY());
             List<Square> square2_onward_moves = allPossibleMoves(o2.getX(), o2.getY());
+
+            // don't count Square already visited
+
+            square1_onward_moves = square1_onward_moves.stream().filter( element ->
+                    (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
+            square2_onward_moves = square2_onward_moves.stream().filter( element ->
+                    (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
+
             int len1 = square1_onward_moves.size();
             int len2 = square2_onward_moves.size();
             return Integer.compare(len1, len2);
@@ -70,12 +81,20 @@ public final class Search {
             long end = System.currentTimeMillis();
             System.out.format("Total time of computation: %d ms", (end - start));
 
+            JFrame jf = new JFrame();
+            jf.setSize(700, 700);
+            jf.setTitle("Knight's Tour");
+            jf.getContentPane().add(new ChessBoard(theWalkedPath, 8));
+            jf.setLocationRelativeTo(null);
+            jf.setBackground(Color.WHITE);
+            jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            jf.setVisible(true);
 
-           // throw new FoundSolutionException(); // I know this is ugly, but it needs to be done.
+
+           //  throw new FoundSolutionException(); // I know this is ugly, but it needs to be done.
             // Otherwise, it will search endlessly for solutions.
             exit(0);
 
-            return true;
 
 
         } else {
@@ -90,16 +109,17 @@ public final class Search {
             // Neat trick:
             // prioritize moves with the lowest number of onward moves.
             // After sorting, these moves are to be found at the beginning of the candidates List
-            // astonishing: this line improves performance a ten-fold, literally!
+            // astonishing: this line improves performance a hundred-fold, a thousand-fold!
+            // this phenomenon is particularly observable for big boards
             candidates.sort(new SquareMovesComparator());
 
             candidates.forEach( possibleMove -> {
-                /*
+
                 if (possibleMove == null) {
                     System.out.println("got here");
                     return; // this, surprisingly and unexpectedly only skips ONE Iteration.
                 }
-                */
+
 
                 theWalkedPath.add(possibleMove);
                 board[possibleMove.getX()][possibleMove.getY()] = theWalkedPath.indexOf(possibleMove);
@@ -110,7 +130,7 @@ public final class Search {
                     e.printStackTrace();
                 }
 
-                //board[possibleMove.getX()][possibleMove.getY()] = 0;
+                board[possibleMove.getX()][possibleMove.getY()] = 0;
                 theWalkedPath.remove(possibleMove);
                  //possibleMove = null;
             });

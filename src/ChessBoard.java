@@ -11,14 +11,23 @@ public final class ChessBoard extends JPanel {
 
     private Graphics g1;
     private final int BOARD_LEN;
+    private final int BOARDSIZE; // 8
 
-    private List<Square> theWalkedPath;
-    private Stack<Square> stack;
+    private  List<Square> walkedPathListForTesting;
+    private final Stack<Square> stack;
 
+    public ChessBoard(Stack<Square> walkedPath, int board_len) {
+        BOARDSIZE = board_len;
+        BOARD_LEN = 75 * board_len;
+        Stack<Square> walkedPathCopy = new Stack<>();
+        walkedPathCopy.addAll(walkedPath);
+        this.stack = walkedPathCopy;
+        this.walkedPathListForTesting = null;
+    }
 
     public ChessBoard(int board_len) {
-        this.theWalkedPath = new ArrayList<>();
-        this.theWalkedPath = Arrays.asList(new Square(0, 0), new Square(2, 1), new Square(0, 2),
+        this.walkedPathListForTesting = new ArrayList<>();
+        this.walkedPathListForTesting = Arrays.asList(new Square(0, 0), new Square(2, 1), new Square(0, 2),
                               new Square(1, 0), new Square(3, 1), new Square(5, 0),
                               new Square(7, 1), new Square(6, 3), new Square(7, 5),
                               new Square(6, 7), new Square(4, 6), new Square(2, 7),
@@ -42,13 +51,14 @@ public final class ChessBoard extends JPanel {
                               new Square(4, 5));
 
         this.stack = new Stack<>();
-        this.stack.addAll(theWalkedPath);
+        this.stack.addAll(walkedPathListForTesting);
 
 
         /*
         TODO:
             Could map this for the range 8 -> 600
          */
+        BOARDSIZE = board_len;
         BOARD_LEN = 75 * board_len;
 
     }
@@ -78,21 +88,19 @@ public final class ChessBoard extends JPanel {
         // gp.setColor(Color.BLACK);
         // gp.drawRect(50,50,600, 600); // square around the board
 
-
-        int offset = 30;
-        for (int i = 50; i < BOARD_LEN; i += 75) {
-            dot(i + offset, 50 + offset, 10, 10);
-        }
-
-
         Collections.reverse(stack);
+        int i = 0;
+        Point[] points = new Point[BOARDSIZE * BOARDSIZE];
 
-        while (!stack.isEmpty()) {
-            Square sq = stack.pop();
-           // System.out.println(sq);
-
+        for (Square  sq : stack) {
+            points[i] = new Point((sq.getX()+1)*75+7, (sq.getY()+1)*75+7);
+            if ( i > 0) {
+                dot(points[i].x, points[i].y, 10, 10);
+                int offset = 5;
+                line(points[i-1].x+offset, points[i-1].y+offset, points[i].x+offset, points[i].y+offset);
+            }
+            i++;
         }
-
     }
 
 
@@ -110,16 +118,21 @@ public final class ChessBoard extends JPanel {
 
     public final void dot(int x1, int y1, int x2, int y2) {
         Graphics2D g2d = (Graphics2D) g1.create();
+        g2d.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.setColor(Color.BLACK);
         g2d.fillOval(x1, y1, x2, y2);
     }
 
 
+    public static int map(int number, int a1 , int a2, int b1, int b2) {
+        return b1 + ((number - a1) *(b2-b1) )/ (a2-a1);
+
+    }
     public static void main(String[] args) {
 
         JFrame jf = new JFrame();
         jf.setSize(700, 700);
-        jf.setTitle("Draw Chess Board");
+        jf.setTitle("Knight's Tour");
         jf.getContentPane().add(new ChessBoard(8));
         jf.setLocationRelativeTo(null);
         jf.setBackground(Color.WHITE);

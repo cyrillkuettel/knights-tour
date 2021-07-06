@@ -6,7 +6,7 @@ public class demoSearch {
         try {
             search.startSearch();
         } catch (FoundSolutionException ignored) {
-
+            System.out.println("catched FoundSolutionException");
         }
 
 
