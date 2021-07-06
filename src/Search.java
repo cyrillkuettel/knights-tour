@@ -94,7 +94,7 @@ public final class Search {
            //  throw new FoundSolutionException(); // I know this is ugly, but it needs to be done.
             // Otherwise, it will search endlessly for solutions.
             exit(0);
-
+            return true;
 
 
         } else {

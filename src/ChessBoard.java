@@ -1,7 +1,11 @@
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import javax.swing.JPanel;
@@ -133,10 +137,27 @@ public final class ChessBoard extends JPanel {
         JFrame jf = new JFrame();
         jf.setSize(700, 700);
         jf.setTitle("Knight's Tour");
-        jf.getContentPane().add(new ChessBoard(8));
+        ChessBoard board = new ChessBoard(8);
+        jf.getContentPane().add(board);
         jf.setLocationRelativeTo(null);
         jf.setBackground(Color.WHITE);
+        jf.getContentPane().setBackground(Color.WHITE);
+
+
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setVisible(true);
+        takePicture(board);
+    }
+    static void takePicture(JPanel panel) {
+        BufferedImage img = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+        panel.print(img.getGraphics()); // or: panel.printAll(...);
+        try {
+            ImageIO.write(img, "jpg", new File("/home/cyrill/Documents/panel.jpg"));
+            // ImageIO.write(img, "png", new File("/home/cyrill/Documents/panel.png"));
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
