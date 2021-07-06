@@ -58,6 +58,9 @@ public final class Search {
      * @return Solution to the knight's tour.
      * @throws Exception Throws Exception if one square is present more than once.
      */
+
+    // My suggestion is that PriorityQueue will improve performance, because you have very fast access to the top element
+
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (theWalkedPath.size() == (BOARD_LEN*BOARD_LEN)) {
@@ -67,8 +70,14 @@ public final class Search {
             long end = System.currentTimeMillis();
             System.out.format("Total time of computation: %d ms", (end - start));
 
-            exit(0); // only search one Solution
+
+           // throw new FoundSolutionException(); // I know this is ugly, but it needs to be done.
+            // Otherwise, it will search endlessly for solutions.
+            exit(0);
+
             return true;
+
+
         } else {
            // System.out.println(theWalkedPath);
             Square nextSquare = theWalkedPath.peek(); // the latest move.
@@ -85,10 +94,13 @@ public final class Search {
             candidates.sort(new SquareMovesComparator());
 
             candidates.forEach( possibleMove -> {
+                /*
                 if (possibleMove == null) {
                     System.out.println("got here");
                     return; // this, surprisingly and unexpectedly only skips ONE Iteration.
                 }
+                */
+
                 theWalkedPath.add(possibleMove);
                 board[possibleMove.getX()][possibleMove.getY()] = theWalkedPath.indexOf(possibleMove);
 
@@ -98,12 +110,13 @@ public final class Search {
                     e.printStackTrace();
                 }
 
-                board[possibleMove.getX()][possibleMove.getY()] = 0;
+                //board[possibleMove.getX()][possibleMove.getY()] = 0;
                 theWalkedPath.remove(possibleMove);
-                possibleMove = null;
+                 //possibleMove = null;
             });
             return false; // if all the moves failed
         }
+
     }
 
     /**

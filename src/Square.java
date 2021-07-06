@@ -39,7 +39,8 @@ public final class Square implements Comparable<Square> {
 
     @Override
     public String toString() {
-        return "[" + String.valueOf(x) + " " + String.valueOf(y) + "] ";
+        // return "[" + String.valueOf(x) + " " + String.valueOf(y) + "] ";
+        return "new Square(" + String.valueOf(x) + ", " + String.valueOf(y) + ") ";
     }
 
     @Override
