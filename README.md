@@ -1,10 +1,17 @@
 # knights-tour
 
-I want to solve knights tour. This time in Java.  
-  
-This time I use the backtracking approach..  
-The function should theoretically work for any n*n square board. However, if n is >10, it will take a long time.
-## TODO:
-- Implement a Priority Queue with Comparator. This should improve performance tremendously. The knight will then always jump to the square with the least number of onward moves. (Wandorffs rule)
+# What is a knight's tour?
+##(classic problem)
+It's a series of moves of a chess knight that visits all squares on the board exactly once.
+ 
+# How can I run it myself?
+Find the class [demoSearch](src/Backtracking/demoSearch.java). This is the driver class. You can set the starting position (x,y) of the Knight. Default board size is 8x8. This, too can be changed. 
+I'm currently writing different algorithms to solve the problem of knigh's tour. This programm has a working backtracking implementation. 
 
-![](tour.png)
+#TODO
+- Next, I will code a genetic algorithm. The main driving force, let's say _inspiration_, was [this](01331065.pdf) wonderful paper. 
+- For backtracking: Replace List<Square> candidates with a Priority Queue? Might be even faster, because this approach does not need to sort the List.
+ However, since the list.length will never exceed 8, it's unlikely to have any significant effect. 
+  
+
+![](demo.png)
