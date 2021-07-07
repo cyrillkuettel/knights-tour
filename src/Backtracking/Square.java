@@ -1,3 +1,5 @@
+package Backtracking;
+
 public final class Square implements Comparable<Square> {
     private final int x;
     private final int y;
@@ -40,7 +42,7 @@ public final class Square implements Comparable<Square> {
     @Override
     public String toString() {
         // return "[" + String.valueOf(x) + " " + String.valueOf(y) + "] ";
-        return "new Square(" + String.valueOf(x) + ", " + String.valueOf(y) + ") ";
+        return "new Backtracking.Square(" + String.valueOf(x) + ", " + String.valueOf(y) + ") ";
     }
 
     @Override

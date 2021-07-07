@@ -1,3 +1,5 @@
+package Backtracking;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -46,7 +48,7 @@ public final class Search {
             List<Square> square1_onward_moves = allPossibleMoves(o1.getX(), o1.getY());
             List<Square> square2_onward_moves = allPossibleMoves(o2.getX(), o2.getY());
 
-            // don't count Square already visited
+            // don't count Backtracking.Square already visited
 
             square1_onward_moves = square1_onward_moves.stream().filter( element ->
                     (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
@@ -75,7 +77,7 @@ public final class Search {
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (foundSolution(theWalkedPath)) {
-            System.out.println("found Solution! " + '\n' + theWalkedPath.toString());
+            System.out.println("found Solution! " + '\n' + theWalkedPath);
             PrettyPrinter prettyPrinter = new PrettyPrinter(System.out);
             prettyPrinter.print(convertIntArrayToStringArray(board));
             long end = System.currentTimeMillis();
@@ -91,7 +93,7 @@ public final class Search {
             jf.setVisible(true);
 
 
-           //  throw new FoundSolutionException(); // I know this is ugly, but it needs to be done.
+           //  throw new Backtracking.FoundSolutionException(); // I know this is ugly, but it needs to be done.
             // Otherwise, it will search endlessly for solutions.
             exit(0);
             return true;
@@ -170,7 +172,7 @@ public final class Search {
 
     /**
      *
-     * @param candidates all legal moves from a given Square, without limitations.
+     * @param candidates all legal moves from a given Backtracking.Square, without limitations.
      * @param walkedPath history of moves, these moves should no longer be considered a valid option. (Because that's the point of knight's tour)
      * @return candidates minus walkedPath
      */
@@ -185,7 +187,7 @@ public final class Search {
 
 
     /**
-     *  It just calculates all 'L-Shapes' from a Square.
+     *  It just calculates all 'L-Shapes' from a Backtracking.Square.
      */
     public void initPossibleMoves() {
         for (int i = 0; i < BOARD_LEN; i++) {

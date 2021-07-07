@@ -1,3 +1,5 @@
+package Backtracking;
+
 public final class Point {
     final int x;
     final int y;

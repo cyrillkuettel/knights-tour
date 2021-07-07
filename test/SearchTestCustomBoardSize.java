@@ -1,10 +1,9 @@
+import Backtracking.Search;
+import Backtracking.Square;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
-import java.text.CollationElementIterator;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class SearchTestCustomBoardSize {

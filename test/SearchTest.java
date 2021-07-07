@@ -1,6 +1,7 @@
+import Backtracking.Search;
+import Backtracking.Square;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 
 
 import java.util.*;
