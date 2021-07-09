@@ -2,18 +2,7 @@ package Genetic_Algorithm;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-/*
-1: generation = 0;
-2: population[generation] = initializePopulation(populationSize);
-3: evaluatePopulation(population[generation]);
-3: While isTerminationConditionMet() == false do
-4:     parents = selectParents(population[generation]);
-5:    population[generation+1] = crossover(parents);
-6:   population[generation+1] = mutate(population[generation+1]);
-7:    evaluatePopulation(population[generation]);
-8:     generation++;
-9: End loop;
- */
+
 
 public final class World {
     private static final int populationCount = 50;
@@ -31,6 +20,7 @@ public final class World {
         if (flip(pCrossover)) {
 
         }
+        return null;
     }
 
 
