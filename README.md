@@ -8,6 +8,7 @@ It's a series of moves of a chess knight that visits all squares on the board ex
 1. Clone the project.
 2. Locate the class [demoSearch](src/Backtracking/demoSearch.java). This is the driver class. You can set the starting position (x,y) of the Knight. Default board size is 8x8. This, too can be changed. 
 I'm currently writing different algorithms to solve the problem of knigh's tour. This programm has a working backtracking implementation. 
+3. To see the visualization, use [ChessBoard](src/Backtracking/ChessBoard.java) class. This is experimental. As of now, there are some issues with saving the file. 
 
 # TODO
 - Next, I will code a genetic algorithm. The main driving force, let's say _inspiration_, was this [wonderful paper](https://www.iiitb.ac.in/CSL/projects/Chitrakavya/downloads/01331065.pdf) 
