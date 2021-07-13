@@ -68,34 +68,32 @@ public final class Individual {
      */
     // sieht kompliziert aus. Aber simpler Ablauf:
     // 1) Decipher Code. Zeigt (einer von maximal 8 möglichen) Richtungswechsel an
-    // 2) Addieren der x(t) + x(t+1) und y(t) + y(t+1) wenn t = time
+    // 2) Richtungswechsel zur alten Kooridnate addieren. mathematisch: x(t) + x(t+1) und y(t) + y(t+1),  t = time
     // 3) Kontrolle, ob überhaupt möglich. Wenn nicht, abbruch.
     public int FitnessFunction(){
         Stack<Square> walkedPath = new Stack<>();
         walkedPath.add(startPosition);
-
         boolean detectingValidMoves = true;
         int[] codes = parseBitStringToDecimal();
-
         int count = 0;
         do  {
             Square previousSquare = walkedPath.peek();
             List<Square> legalMoves = map.get(previousSquare);
-
             Square directionalChange = directions.get(codes[count]);
+            int offsetX = previousSquare.getX() + directionalChange.getX();
+            int offsetY = previousSquare.getY() + directionalChange.getY();
             Square nextSquare = new Square( // simple addition of the corresponding coordinates
-                    previousSquare.getX()+ directionalChange.getX(),
-                    previousSquare.getY() + directionalChange.getY());
-
-            System.out.println(nextSquare);
-
-            if (legalMoves.contains(nextSquare) && !walkedPath.contains(nextSquare)) {
-                // if next square is legal and not yet visited, add it
-                walkedPath.add(directions.get(codes[count]));
-                count++;
-            } else {
+                    offsetX, offsetY);
+            if (offsetX < 0 || offsetY < 0) {
                 detectingValidMoves = false;
-                System.out.format("exiting with count = %d", count);
+            } else {
+                if (legalMoves.contains(nextSquare) && !walkedPath.contains(nextSquare)) {
+                    // if next square is legal and not yet visited, add it
+                    walkedPath.add(nextSquare);
+                    count++;
+                } else {
+                    detectingValidMoves = false;
+                }
             }
         } while (detectingValidMoves);
 
