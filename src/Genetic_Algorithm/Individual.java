@@ -5,6 +5,7 @@ import Backtracking.ValidKnightMoves;
 
 
 import java.util.*;
+import java.util.function.DoubleToIntFunction;
 import java.util.stream.Stream;
 
 import static Backtracking.WalkedPathUtils.hasDuplicates;
@@ -26,7 +27,7 @@ public final class Individual {
     private int[] chromosome;
     private int fitness;
     // start Position has to be hard-coded it seems. The bitstring only codes *where* to move, not from where
-    private final Square startPosition = new Square(0,0);
+    private final Square startPosition = new Square(3,3);
     public static final Map<Integer, Square> directions = new HashMap<>();
     private final ValidKnightMoves validKnightMoves = new ValidKnightMoves(World.BOARD_LEN);
     private Map<Square, List<Square>> map;
@@ -61,14 +62,19 @@ public final class Individual {
 
     /**
      * simply counts the number of legal move which the genotype represents.
+     * Moves, which have been visited are illegal, as well as moves which move off the baord.
      * moves after an illegal move are not counted.
      * @return number of legal moves the knight represents
      */
+    // sieht kompliziert aus. Aber simpler Ablauf:
+    // 1) Decipher Code. Zeigt (einer von maximal 8 möglichen) Richtungswechsel an
+    // 2) Addieren der x(t) + x(t+1) und y(t) + y(t+1) wenn t = time
+    // 3) Kontrolle, ob überhaupt möglich. Wenn nicht, abbruch.
     public int FitnessFunction(){
         Stack<Square> walkedPath = new Stack<>();
         walkedPath.add(startPosition);
 
-        boolean validSequence = true;
+        boolean detectingValidMoves = true;
         int[] codes = parseBitStringToDecimal();
 
         int count = 0;
@@ -76,25 +82,25 @@ public final class Individual {
             Square previousSquare = walkedPath.peek();
             List<Square> legalMoves = map.get(previousSquare);
 
-            Square nextSquare = directions.get(codes[count]);
+            Square directionalChange = directions.get(codes[count]);
+            Square nextSquare = new Square( // simple addition of the corresponding coordinates
+                    previousSquare.getX()+ directionalChange.getX(),
+                    previousSquare.getY() + directionalChange.getY());
+
+            System.out.println(nextSquare);
+
             if (legalMoves.contains(nextSquare) && !walkedPath.contains(nextSquare)) {
                 // if next square is legal and not yet visited, add it
                 walkedPath.add(directions.get(codes[count]));
                 count++;
             } else {
-                validSequence = false;
+                detectingValidMoves = false;
+                System.out.format("exiting with count = %d", count);
             }
+        } while (detectingValidMoves);
 
-
-        } while (validSequence);
-
-        Square square = directions.get(codes[0]);
-       // Square jumpSquare =
-
-        // the translation is dependent on the starting position and current int[] chromosome.
-        // then count the number of valid moves from the resulting List<Square> [ ]
-
-        return 0;
+        System.out.println(walkedPath);
+        return count;
     }
 
 
@@ -133,7 +139,8 @@ public final class Individual {
 
     public static void main(String[] args) {
         Individual i = new Individual();
-        i.FitnessFunction();
+        System.out.println(i.FitnessFunction());
+
 
     }
 
