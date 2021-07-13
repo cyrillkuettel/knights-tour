@@ -1,5 +1,6 @@
 import Backtracking.Search;
 import Backtracking.Square;
+import Backtracking.ValidKnightMoves;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -9,6 +10,9 @@ import java.util.*;
 
 public class SearchTest {
     Search search;
+    public static final int BOARD_LEN = 8;
+    ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
+
 
 
     @Test
@@ -17,7 +21,7 @@ public class SearchTest {
         // this test should work on any size Board >=5
         // it Works on 8x8, but not on other board sizes. This is very suspicious.
 
-        search = new Search(1, 2, 8);
+        search = new Search(1, 2, BOARD_LEN);
         Stack<Square> walkedPath = new Stack<>();
 
         // path the knight took
@@ -46,7 +50,7 @@ public class SearchTest {
 
     @Test
     public void testAllPossibleMoves() {
-        search = new Search(1, 2, 8);
+        search = new Search(1, 2, BOARD_LEN);
 
         List<Square> expected = new ArrayList<>();
         expected.add(new Square(0,0));
@@ -56,7 +60,7 @@ public class SearchTest {
         expected.add(new Square(2,0));
         expected.add(new Square(3,1));
 
-        List<Square> outcome = search.allPossibleMoves(1, 2);
+        List<Square> outcome = validKnightMoves.allPossibleMoves(1, 2);
 
         // Lists should contain the same elements
         Assertions. assertTrue(expected.size() == outcome.size() &&
@@ -65,42 +69,11 @@ public class SearchTest {
 
     }
 
-    @Test
-    public void testFilterVisitedSquares2() {
-        // [[0 0] , [2 1] , [4 2] , [2 3] , [0 2] , [1 4] ]
 
-        // this test was supposed to be only for a 5x5 board.
-
-        search = new Search(0,0,5);
-        Stack<Square> walkedPath = new Stack<>();
-
-        walkedPath.add(new Square(0, 0));
-        walkedPath.add(new Square(2, 1));
-        walkedPath.add(new Square(4, 2));
-        walkedPath.add(new Square(2, 3));
-        walkedPath.add(new Square(0, 2));
-
-        Square currentPos = new Square(1, 4);
-        walkedPath.add(currentPos);
-
-        List<Square> possibleMoves = search.getMap().get(currentPos);
-        List<Square> candidates = search.filterVisitedSquares(possibleMoves, walkedPath);
-
-        // so there should be lots of candidates from this position
-        Square onlyAlternative1 = new Square(2,2);
-        Square onlyAlternative2 = new Square(3,3);
-
-        Assertions.assertTrue(possibleMoves.contains(onlyAlternative1) && possibleMoves.contains(onlyAlternative2));
-        /*
-        Assertions.assertTrue(candidates.contains(onlyAlternative1) && candidates.contains(onlyAlternative2));
-        Assertions.assertEquals(2, candidates.size());
-        */
-
-    }
 
     @Test
     public void testComparator() {
-        search = new Search(0,0,8);
+        search = new Search(0,0,BOARD_LEN);
 
 
         List<Square> candidates = new ArrayList<>();
@@ -111,8 +84,8 @@ public class SearchTest {
         candidates.add(lessMoves);
 
         candidates.sort((o1, o2) -> {
-            List<Square> square1_onward_moves = search.allPossibleMoves(o1.getX(), o1.getY());
-            List<Square> square2_onward_moves = search.allPossibleMoves(o2.getX(), o2.getY());
+            List<Square> square1_onward_moves = validKnightMoves.allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = validKnightMoves.allPossibleMoves(o2.getX(), o2.getY());
 
 
             int len1 = square1_onward_moves.size();
@@ -128,7 +101,7 @@ public class SearchTest {
 
     @Test
     public void testComparatorWithMoreSquares   () {
-        search = new Search(0,0,8);
+        search = new Search(0,0,BOARD_LEN);
 
 
         List<Square> candidates = new ArrayList<>();
@@ -147,8 +120,9 @@ public class SearchTest {
 
 
         candidates.sort((o1, o2) -> {
-            List<Square> square1_onward_moves = search.allPossibleMoves(o1.getX(), o1.getY());
-            List<Square> square2_onward_moves = search.allPossibleMoves(o2.getX(), o2.getY());
+
+            List<Square> square1_onward_moves = validKnightMoves.allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = validKnightMoves.allPossibleMoves(o2.getX(), o2.getY());
 
 
             int len1 = square1_onward_moves.size();
@@ -167,7 +141,7 @@ public class SearchTest {
 
     @Test
     public void testMap() {
-        search = new Search(0,0,8);
+        search = new Search(0,0,BOARD_LEN);
         Stack<Square> walkedPath = new Stack<>();
         Square currentPos = new Square(1, 4);
         walkedPath.add(currentPos);
@@ -186,7 +160,7 @@ public class SearchTest {
 
     @Test
     public void testHasDuplicates() {
-        search = new Search(0, 0);
+        search = new Search(0, 0, BOARD_LEN);
         Stack<Square> stack = new Stack<>();
         stack.add(new Square(1,1));
         stack.add(new Square(1,1));
@@ -195,7 +169,7 @@ public class SearchTest {
 
     @Test
     public void testHasDuplicatesIfNotDuplicates() {
-        search = new Search(0, 0);
+        search = new Search(0, 0, BOARD_LEN);
         Stack<Square> stack = new Stack<>();
         stack.add(new Square(1,1));
         stack.add(new Square(1,2));

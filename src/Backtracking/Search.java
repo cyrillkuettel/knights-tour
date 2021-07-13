@@ -14,7 +14,7 @@ public final class Search {
 
 
 
-    private static Map<Square, List<Square>> map = new HashMap<>(); // maps coordinate to List of possible moves
+    private Map<Square, List<Square>> map; // maps coordinate to List of possible moves
     private final int[][] board;
 
     public Search(final int startPosX, final int startPosY, final int BOARDSIZE)  {
@@ -22,7 +22,9 @@ public final class Search {
         this.startPosY = startPosY;
         this.BOARD_LEN = BOARDSIZE;
         this.board = new int[BOARD_LEN][BOARD_LEN];
-        initPossibleMoves();
+        ValidKnightMoves validknightMoves = new ValidKnightMoves(this.BOARD_LEN);
+        validknightMoves.initPossibleMoves();
+        this.map = validknightMoves.getMap();
     }
 
     public Search(final int startPosX, final int startPosY)  {
@@ -45,8 +47,10 @@ public final class Search {
     public class SquareMovesComparator implements Comparator<Square> {
         @Override
         public int compare(Square o1, Square o2) {
-            List<Square> square1_onward_moves = allPossibleMoves(o1.getX(), o1.getY());
-            List<Square> square2_onward_moves = allPossibleMoves(o2.getX(), o2.getY());
+            ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
+
+            List<Square> square1_onward_moves = validKnightMoves.allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = validKnightMoves.allPossibleMoves(o2.getX(), o2.getY());
 
             // don't count Backtracking.Square already visited
 
@@ -141,6 +145,20 @@ public final class Search {
 
     }
 
+    public boolean foundSolution(Stack<Square> theWalkedPath) {
+        return theWalkedPath.size() == (BOARD_LEN*BOARD_LEN);
+    }
+
+    public boolean hasDuplicates(Stack<Square> stack) {
+        Set<Square> set = new HashSet<>();
+        for (Square each : stack) {
+            if (!set.add(each)) {
+                return true; // set.add returns false if the size of set did not change
+            }
+        }
+        return false;
+    }
+
     /**
      * returns duplicates in a stack, if present.
      * @param walkedPath Stack which supposedly contains duplicates
@@ -160,65 +178,15 @@ public final class Search {
         return setToReturn.toString();
     }
 
-    public boolean hasDuplicates(Stack<Square> stack) {
-        Set<Square> set = new HashSet<>();
-        for (Square each : stack) {
-            if (!set.add(each)) {
-                return true; // set.add returns false if the size of set did not change
-            }
-        }
-        return false;
-    }
-
     /**
      *
      * @param candidates all legal moves from a given Backtracking.Square, without limitations.
-     * @param walkedPath history of moves, these moves should no longer be considered a valid option. (Because that's the point of knight's tour)
+     * @param walkedPath history of moves, these moves should no longer be considered a valid option.
+     *                   (Because that's the point of knight's tour)
      * @return candidates minus walkedPath
      */
     public List<Square> filterVisitedSquares(List<Square> candidates, Stack<Square> walkedPath) {
         return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
-    }
-
-    public boolean foundSolution(Stack<Square> theWalkedPath) {
-       return theWalkedPath.size() == (BOARD_LEN*BOARD_LEN);
-    }
-
-
-
-    /**
-     *  It just calculates all 'L-Shapes' from a Backtracking.Square.
-     */
-    public void initPossibleMoves() {
-        for (int i = 0; i < BOARD_LEN; i++) {
-            for (int j = 0; j < BOARD_LEN; j++) {
-                allPossibleMoves(i, j);
-            }
-        }
-    }
-
-    /**
-     * Calculates all Legal Knight moves from a given position
-     * @param p 0-based X-coordinate
-     * @param q 0-based Y-coordinate
-     */
-    public  List<Square> allPossibleMoves(int p, int q) {
-        List<Square> possibleFields = new ArrayList<>();
-
-        int[] X = {2, 1, -1, -2, -2, -1, 1, 2};
-        int[] Y = {1, 2, 2, 1, -1, -2, -2, -1};
-        // Check if each possible move is valid or not
-        for (int i = 0; i < X.length; i++) {
-            // Position of knight after move
-            int x = p + X[i];
-            int y = q + Y[i];
-            // count valid moves
-            if (x >= 0 && y >= 0 && x < BOARD_LEN && y < BOARD_LEN) {
-                possibleFields.add(new Square(x, y));
-            }
-        }
-        map.put(new Square(p, q), possibleFields);
-        return possibleFields;
     }
 
     public String[][] convertIntArrayToStringArray(int[][] input) {
@@ -231,8 +199,6 @@ public final class Search {
         }
         return boardString;
     }
-
-
 
     // used for Tests
     public int[][] getBoard() {

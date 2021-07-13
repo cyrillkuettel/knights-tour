@@ -4,11 +4,14 @@ import Backtracking.Square;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 import java.util.stream.Stream;
 
 public final class Individual {
     /*
-        Numerical representations of given knight moves from square X
+        Numerical representations of given knight moves from square X (all in Map directions)
 
         * 4 * 3 *
         5 * * * 2
@@ -22,11 +25,23 @@ public final class Individual {
 
     private int[] chromosome;
     private int fitness;
+    // start Position has to be hard-coded it seems. The bitstring only codes *where* to move, not from where
     private final Square startPosition = new Square(0,0);
     private Square phenotype;
+    public static final Map<Integer, Square> directions = new HashMap<>();
+
 
     public Individual(int[] chromosome) {
         this.chromosome = chromosome;
+        directions.put(0, new Square(1,-2));
+        directions.put(1, new Square(2,1));
+        directions.put(2, new Square(2,-1));
+        directions.put(3, new Square(1,-2));
+        directions.put(4, new Square(-1,-2));
+        directions.put(5, new Square(-2,-1));
+        directions.put(6, new Square(-2,1));
+        directions.put(7, new Square(-1,2));
+
     }
 
     public Individual() {
@@ -46,14 +61,22 @@ public final class Individual {
      * @return number of legal moves the knight represents
      */
     public int FitnessFunction(){
+        Stack<Square> walkedPath = new Stack<>();
 
+        boolean validSequence = true;
+
+        int[] codes = parseBitStringToDecimal();
+        Square square = directions.get(codes[0]);
+       // Square jumpSquare =
 
 
         // it needs to be
-        // decoded                                                      [ ]
-        // translated into coorindates ( Squares)                       [ ]
-        // the translation is dependent on the starting position and int[] chromosome.
-        // from there, first I need to count the number of valid moves. [ ]
+        // decoded                                                      [X]
+        // Map for Example 7 -> (-1|2)
+
+        // translated into coorindates ( Squares)                       [X]
+        // the translation is dependent on the starting position and current int[] chromosome.
+        // then count the number of valid moves from the resulting List<Square> [ ]
 
         return 0;
     }
@@ -88,6 +111,7 @@ public final class Individual {
         final String[] chroms = input.split("");
         this.chromosome = Stream.of(chroms).mapToInt(Integer::parseInt).toArray();
     }
+
 
     public static void main(String[] args) {
         Individual i = new Individual();
