@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import static java.lang.System.exit;
 
 public final class Search {
@@ -106,11 +107,11 @@ public final class Search {
         } else {
            // System.out.println(theWalkedPath);
             Square nextSquare = theWalkedPath.peek(); // the latest move.
-            if (hasDuplicates(theWalkedPath)) {
-                throw new Exception("Fatal: spotted duplicates:\n" + getDuplicates(theWalkedPath));
+            if (WalkedPathUtils.hasDuplicates(theWalkedPath)) {
+                throw new Exception("Fatal: spotted duplicates:\n" + WalkedPathUtils.getDuplicates(theWalkedPath));
             }
 
-            List<Square> candidates = filterVisitedSquares(map.get(nextSquare), theWalkedPath);
+            List<Square> candidates = WalkedPathUtils.filterVisitedSquares(map.get(nextSquare), theWalkedPath);
 
             // Neat trick:
             // prioritize moves with the lowest number of onward moves.
@@ -149,45 +150,11 @@ public final class Search {
         return theWalkedPath.size() == (BOARD_LEN*BOARD_LEN);
     }
 
-    public boolean hasDuplicates(Stack<Square> stack) {
-        Set<Square> set = new HashSet<>();
-        for (Square each : stack) {
-            if (!set.add(each)) {
-                return true; // set.add returns false if the size of set did not change
-            }
-        }
-        return false;
-    }
 
-    /**
-     * returns duplicates in a stack, if present.
-     * @param walkedPath Stack which supposedly contains duplicates
-     */
-    private String getDuplicates(Stack<Square> walkedPath)
-    {
-        final Set<Square> setToReturn = new HashSet<>();
-        final Set<Square> set1 = new HashSet<>();
 
-        for (Square yourInt : walkedPath)
-        {
-            if (!set1.add(yourInt))
-            {
-                setToReturn.add(yourInt);
-            }
-        }
-        return setToReturn.toString();
-    }
 
-    /**
-     *
-     * @param candidates all legal moves from a given Backtracking.Square, without limitations.
-     * @param walkedPath history of moves, these moves should no longer be considered a valid option.
-     *                   (Because that's the point of knight's tour)
-     * @return candidates minus walkedPath
-     */
-    public List<Square> filterVisitedSquares(List<Square> candidates, Stack<Square> walkedPath) {
-        return candidates.stream().filter(el -> !walkedPath.contains(el)).collect(Collectors.toList());
-    }
+
+
 
     public String[][] convertIntArrayToStringArray(int[][] input) {
         String[][] boardString = new String[BOARD_LEN][BOARD_LEN];

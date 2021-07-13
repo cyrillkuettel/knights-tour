@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class World {
     private static final int populationCount = 50;
+    public static final int BOARD_LEN = 8;
     private final List<Individual> population = new ArrayList<>();
 
 

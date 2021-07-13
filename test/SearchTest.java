@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.*;
 
+import static Backtracking.WalkedPathUtils.filterVisitedSquares;
+import static Backtracking.WalkedPathUtils.hasDuplicates;
+
 
 public class SearchTest {
     Search search;
@@ -38,7 +41,7 @@ public class SearchTest {
 
         List<Square> possibleMoves = search.getMap().get(currentPos);
 
-        List<Square> candidates = search.filterVisitedSquares(possibleMoves, walkedPath);
+        List<Square> candidates = filterVisitedSquares(possibleMoves, walkedPath);
 
 
         Square onlyAlternative1 = new Square(3,1);
@@ -164,7 +167,7 @@ public class SearchTest {
         Stack<Square> stack = new Stack<>();
         stack.add(new Square(1,1));
         stack.add(new Square(1,1));
-        Assertions.assertTrue(search.hasDuplicates(stack));
+        Assertions.assertTrue(hasDuplicates(stack));
     }
 
     @Test
@@ -173,7 +176,7 @@ public class SearchTest {
         Stack<Square> stack = new Stack<>();
         stack.add(new Square(1,1));
         stack.add(new Square(1,2));
-        Assertions.assertFalse(search.hasDuplicates(stack));
+        Assertions.assertFalse(hasDuplicates(stack));
     }
 
 

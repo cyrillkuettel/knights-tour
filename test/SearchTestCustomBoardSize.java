@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import static Backtracking.WalkedPathUtils.filterVisitedSquares;
+
 public class SearchTestCustomBoardSize {
 
 
@@ -56,7 +58,7 @@ public class SearchTestCustomBoardSize {
         walkedPath.add(currentPos);
 
         List<Square> possibleMoves = search.getMap().get(currentPos);
-        List<Square> candidates = search.filterVisitedSquares(possibleMoves, walkedPath);
+        List<Square> candidates = filterVisitedSquares(possibleMoves, walkedPath);
 
         // so there should be lots of candidates from this position
         Square onlyAlternative1 = new Square(2,2);
@@ -69,4 +71,6 @@ public class SearchTestCustomBoardSize {
         */
 
     }
+
+
 }

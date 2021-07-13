@@ -1,13 +1,13 @@
 package Genetic_Algorithm;
 
 import Backtracking.Square;
+import Backtracking.ValidKnightMoves;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+
+import java.util.*;
 import java.util.stream.Stream;
+
+import static Backtracking.WalkedPathUtils.hasDuplicates;
 
 public final class Individual {
     /*
@@ -27,8 +27,10 @@ public final class Individual {
     private int fitness;
     // start Position has to be hard-coded it seems. The bitstring only codes *where* to move, not from where
     private final Square startPosition = new Square(0,0);
-    private Square phenotype;
     public static final Map<Integer, Square> directions = new HashMap<>();
+    private final ValidKnightMoves validKnightMoves = new ValidKnightMoves(World.BOARD_LEN);
+    private Map<Square, List<Square>> map;
+
 
 
     public Individual(int[] chromosome) {
@@ -41,6 +43,8 @@ public final class Individual {
         directions.put(5, new Square(-2,-1));
         directions.put(6, new Square(-2,1));
         directions.put(7, new Square(-1,2));
+        validKnightMoves.initPossibleMoves();
+        this.map = validKnightMoves.getMap();
 
     }
 
@@ -62,24 +66,39 @@ public final class Individual {
      */
     public int FitnessFunction(){
         Stack<Square> walkedPath = new Stack<>();
+        walkedPath.add(startPosition);
 
         boolean validSequence = true;
-
         int[] codes = parseBitStringToDecimal();
+
+        int count = 0;
+        do  {
+            Square nextSquare = directions.get(codes[count]);
+            Square previousSquare = walkedPath.peek();
+
+            List<Square> legalMoves = map.get(previousSquare);
+            if (legalMoves.contains(nextSquare)) {
+                // if next square is legal and not yet visited, add it
+                walkedPath.add(directions.get(codes[count]));
+            }
+
+            count++;
+        } while (validSequence(walkedPath));
+
         Square square = directions.get(codes[0]);
        // Square jumpSquare =
 
-
-        // it needs to be
-        // decoded                                                      [X]
-        // Map for Example 7 -> (-1|2)
-
-        // translated into coorindates ( Squares)                       [X]
         // the translation is dependent on the starting position and current int[] chromosome.
         // then count the number of valid moves from the resulting List<Square> [ ]
 
         return 0;
     }
+
+    public boolean validSequence(Stack<Square> walkedPath) {
+        // no duplicates and make sure there is a way from Square s(i) to Square s(i+1)
+        return (!hasDuplicates(walkedPath));
+    }
+
 
     public int[] parseBitStringToDecimal() {
         int[] chromosomesDecimal = new int[chromosome.length /3];
