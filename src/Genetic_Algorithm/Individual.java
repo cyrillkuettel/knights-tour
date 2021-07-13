@@ -73,17 +73,20 @@ public final class Individual {
 
         int count = 0;
         do  {
-            Square nextSquare = directions.get(codes[count]);
             Square previousSquare = walkedPath.peek();
-
             List<Square> legalMoves = map.get(previousSquare);
-            if (legalMoves.contains(nextSquare)) {
+
+            Square nextSquare = directions.get(codes[count]);
+            if (legalMoves.contains(nextSquare) && !walkedPath.contains(nextSquare)) {
                 // if next square is legal and not yet visited, add it
                 walkedPath.add(directions.get(codes[count]));
+                count++;
+            } else {
+                validSequence = false;
             }
 
-            count++;
-        } while (validSequence(walkedPath));
+
+        } while (validSequence);
 
         Square square = directions.get(codes[0]);
        // Square jumpSquare =
@@ -94,10 +97,6 @@ public final class Individual {
         return 0;
     }
 
-    public boolean validSequence(Stack<Square> walkedPath) {
-        // no duplicates and make sure there is a way from Square s(i) to Square s(i+1)
-        return (!hasDuplicates(walkedPath));
-    }
 
 
     public int[] parseBitStringToDecimal() {

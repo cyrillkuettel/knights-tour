@@ -49,7 +49,7 @@ public class IndividualTest {
         int testElement = decimalsFromChromosome[1]; // expecting 0
 
         Square expectedDirection = new Square(1, -2);
-        Square actualDirection = Individual.directions.get(testElement);
+        Square actualDirection = individual.directions.get(testElement);
         assertEquals(expectedDirection, actualDirection);
     }
 }
