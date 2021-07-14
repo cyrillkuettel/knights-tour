@@ -5,10 +5,7 @@ import Backtracking.ValidKnightMoves;
 
 
 import java.util.*;
-import java.util.function.DoubleToIntFunction;
 import java.util.stream.Stream;
-
-import static Backtracking.WalkedPathUtils.hasDuplicates;
 
 public final class Individual {
     /*
@@ -27,7 +24,7 @@ public final class Individual {
     private int[] chromosome;
     private int fitness;
     // start Position has to be hard-coded it seems. The bitstring only codes *where* to move, not from where
-    private final Square startPosition = new Square(3,3);
+    private Square startPosition = new Square(3,3);
     public static final Map<Integer, Square> directions = new HashMap<>();
     private final ValidKnightMoves validKnightMoves = new ValidKnightMoves(World.BOARD_LEN);
     private Map<Square, List<Square>> map;
@@ -36,7 +33,7 @@ public final class Individual {
 
     public Individual(int[] chromosome) {
         this.chromosome = chromosome;
-        directions.put(0, new Square(1,-2));
+        directions.put(0, new Square(1,2));
         directions.put(1, new Square(2,1));
         directions.put(2, new Square(2,-1));
         directions.put(3, new Square(1,-2));
@@ -61,7 +58,7 @@ public final class Individual {
     }
 
     /**
-     * simply counts the number of legal move which the genotype represents.
+     * simply counts the number of legal move which the genotype represents. (Start Square is not part of the BitString)
      * Moves, which have been visited are illegal, as well as moves which move off the baord.
      * moves after an illegal move are not counted.
      * @return number of legal moves the knight represents
@@ -74,7 +71,7 @@ public final class Individual {
         Stack<Square> walkedPath = new Stack<>();
         walkedPath.add(startPosition);
         boolean detectingValidMoves = true;
-        int[] codes = parseBitStringToDecimal();
+        int[] codes = parseChromosomeToDecimal();
         int count = 0;
         do  {
             Square previousSquare = walkedPath.peek();
@@ -96,14 +93,12 @@ public final class Individual {
                 }
             }
         } while (detectingValidMoves);
-
-        System.out.println(walkedPath);
         return count;
     }
 
 
 
-    public int[] parseBitStringToDecimal() {
+    public int[] parseChromosomeToDecimal() {
         int[] chromosomesDecimal = new int[chromosome.length /3];
 
         int count = 0;
@@ -134,6 +129,9 @@ public final class Individual {
         this.chromosome = Stream.of(chroms).mapToInt(Integer::parseInt).toArray();
     }
 
+    public void setStartPosition(Square startPosition) {
+        this.startPosition = startPosition;
+    }
 
     public static void main(String[] args) {
         Individual i = new Individual();
