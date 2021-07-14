@@ -19,31 +19,25 @@ public final class Individual {
 
             0     1    2    3    4    5    6    7
             000, 001, 010, 011, 100, 101, 110, 111
+
+            The chromosome codes for this path. Each 8-bit number represents a direction from the previous square.
+            Staring Square is given. The chromosome only codes *where* to move, not from where
      */
 
     private int[] chromosome;
+
     private int fitness;
-    // start Position has to be hard-coded it seems. The bitstring only codes *where* to move, not from where
     private Square startPosition = new Square(3,3);
-    public static final Map<Integer, Square> directions = new HashMap<>();
-    private final ValidKnightMoves validKnightMoves = new ValidKnightMoves(World.BOARD_LEN);
-    private Map<Square, List<Square>> map;
+    private final Map<Integer, Square> directions;
+    private final Map<Square, List<Square>> map;
 
 
 
     public Individual(int[] chromosome) {
         this.chromosome = chromosome;
-        directions.put(0, new Square(1,2));
-        directions.put(1, new Square(2,1));
-        directions.put(2, new Square(2,-1));
-        directions.put(3, new Square(1,-2));
-        directions.put(4, new Square(-1,-2));
-        directions.put(5, new Square(-2,-1));
-        directions.put(6, new Square(-2,1));
-        directions.put(7, new Square(-1,2));
-        validKnightMoves.initPossibleMoves();
+        ValidKnightMoves validKnightMoves = new ValidKnightMoves(World.BOARD_LEN);
         this.map = validKnightMoves.getMap();
-
+        this.directions = validKnightMoves.getDirections();
     }
 
     public Individual() {
@@ -129,16 +123,11 @@ public final class Individual {
         this.chromosome = Stream.of(chroms).mapToInt(Integer::parseInt).toArray();
     }
 
-    public void setStartPosition(Square startPosition) {
-        this.startPosition = startPosition;
+    public void setStartPosition(final int x, final int y) {
+        this.startPosition = new Square(x, y);
     }
 
-    public static void main(String[] args) {
-        Individual i = new Individual();
-        System.out.println(i.FitnessFunction());
-
-
+    public Map<Integer, Square> getDirections() {
+        return directions;
     }
-
-
 }

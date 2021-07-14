@@ -1,3 +1,5 @@
+package Backtracking;
+
 import Backtracking.Search;
 import Backtracking.Square;
 import Backtracking.ValidKnightMoves;

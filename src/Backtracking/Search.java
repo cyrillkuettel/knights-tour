@@ -1,5 +1,7 @@
 package Backtracking;
 
+import org.junit.jupiter.api.Assertions;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -14,8 +16,7 @@ public final class Search {
     private  final int startPosY;
 
 
-
-    private Map<Square, List<Square>> map; // maps coordinate to List of possible moves
+    private final Map<Square, List<Square>> map; // maps coordinate to List of possible moves
     private final int[][] board;
 
     public Search(final int startPosX, final int startPosY, final int BOARDSIZE)  {
@@ -24,7 +25,6 @@ public final class Search {
         this.BOARD_LEN = BOARDSIZE;
         this.board = new int[BOARD_LEN][BOARD_LEN];
         ValidKnightMoves validknightMoves = new ValidKnightMoves(this.BOARD_LEN);
-        validknightMoves.initPossibleMoves();
         this.map = validknightMoves.getMap();
     }
 
@@ -98,8 +98,8 @@ public final class Search {
             jf.setVisible(true);
 
 
-           //  throw new Backtracking.FoundSolutionException(); // I know this is ugly, but it needs to be done.
-            // Otherwise, it will search endlessly for solutions.
+           //  throw new Backtracking.FoundSolutionException(); // I know this is ugly.
+            // Otherwise, it will search endlessly for solutions, and possibly crash your pc.
             exit(0);
             return true;
 
@@ -151,8 +151,28 @@ public final class Search {
     }
 
 
+    /**
+     * helper function which provides valid chromosomes ( sequence of moves coded as BitStrings)
+     * Used for testing in Genetic Algorithm
+     * @return
+     */
+    public String codeWalkedPathToBitString(Stack<Square> theWalkedPath) {
+        // calculate differences between
+        Iterator<Square> it = theWalkedPath.iterator();
 
 
+/*
+        Assertions.assertEquals(previous.getX(), startPosX);
+        Assertions.assertEquals(previous.getY(), startPosY);
+*/
+        while (it.hasNext()) {
+            Square current = it.next();
+            int x = current.getX();
+            int y = current.getY();
+
+        }
+
+    }
 
 
 

@@ -55,7 +55,7 @@ public class IndividualTest {
         final int[] expected = new int[]{0,7,5,5,4,3,2};
 
         individual.setChromosome(chrom);
-        individual.setStartPosition(new Square(5,3));    // starting a tour from Square (5|3)
+        individual.setStartPosition(5,3);    // starting a tour from Square (5|3)
 
 
 
@@ -74,7 +74,7 @@ public class IndividualTest {
         int testElement = decimalsFromChromosome[1]; // expecting 0
 
         Square expectedDirection = new Square(1, -2);
-        Square actualDirection = individual.directions.get(testElement);
+        Square actualDirection = individual.getDirections().get(testElement);
         assertEquals(expectedDirection, actualDirection);
 
     }
@@ -85,7 +85,7 @@ public class IndividualTest {
         //                    000111101101100011010
         final String chrom = "000111101101100011010100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100";
         individual.setChromosome(chrom);
-        individual.setStartPosition(new Square(5,3));    // starting a test from Square (5|3)
+        individual.setStartPosition(5,3);    // starting a test from Square (5|3)
 
         int fitness = individual.FitnessFunction();
         assertEquals(7, fitness);    // should yield 7 because each move is possible
@@ -99,7 +99,7 @@ public class IndividualTest {
         //                    100101100101
         final String chrom = "100101100101100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100";
         individual.setChromosome(chrom);
-        individual.setStartPosition(new Square(7,7));    // starting a test from Square (5|3)
+        individual.setStartPosition(5,3);    // starting a test from Square (5|3)
 
         int fitness = individual.FitnessFunction();
         assertEquals(4, fitness);    // should yield 7 because each move is possible
