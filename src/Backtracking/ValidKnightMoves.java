@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * This class generates all theoretical possible knight moves from a given coorindate (type Square).
  * The results of the computation is then stored in a Map, which other classes can use.
+ * So with this map then you can look up all onward moves from a given Square.
  */
 public final class ValidKnightMoves {
 
