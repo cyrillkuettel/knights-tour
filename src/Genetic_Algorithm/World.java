@@ -1,39 +1,51 @@
 package Genetic_Algorithm;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import Backtracking.Square;
 
+import java.util.concurrent.ThreadLocalRandom;
+            /*
+        1: generation = 0;
+        2: population[generation] = initializePopulation(populationSize);
+        3: evaluatePopulation(population[generation]);
+        3: While isTerminationConditionMet() == false do
+        4:     parents = selectParents(population[generation]);
+        5:    population[generation+1] = crossover(parents);
+        6:   population[generation+1] = mutate(population[generation+1]);
+        7:    evaluatePopulation(population[generation]);
+        8:     generation++;
+        9: End loop;
+         */
 
 public final class World {
-    private static final int populationCount = 50;
+    private static final int POPULATION_SIZE = 50;
     public static final int BOARD_LEN = 8;
-    private final List<Individual> population = new ArrayList<>();
+    public static final int CHROM_LEN =  192;
+    private static final Square startSquare = new Square(0,0);
+    private Population[] population;
 
 
-    private void spawn() {
-        for (int i = 0; i < populationCount; i++) {
-            population.add(new Individual());
-        }
+    public void mainWorld() {
+        int generation = 0;
+        population[generation] = initializePopulation();
     }
+
+    public Population initializePopulation() {
+        return new Population(POPULATION_SIZE, CHROM_LEN, startSquare);
+    }
+
+
+
+
+
 
     // lchrom: current Length of chromosome
     public String[] crossover(String parent1, String parent2, double pCrossover, int lchrom) {
-        if (flip(pCrossover)) {
 
-        }
         return null;
     }
 
 
-    /**
-     * True or false output based on a probability
-     * @param p Probabilty
-     * @return boolean value based on p
-     */
-    public boolean flip(double p) {
-      return ThreadLocalRandom.current().nextDouble() < p;
 
-    }
 
     /**
      * function select implements roulette wheel selection

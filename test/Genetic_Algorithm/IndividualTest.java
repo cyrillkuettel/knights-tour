@@ -70,10 +70,11 @@ public class IndividualTest {
     public void mapTest() {
         final String chrom = "100000010100101101110111000010110001100010001110011010110001101000011001110010000001001001101111000010110011101010011000011100000100100101101111101000111101000111000111110101111000011010011111";
         individual.setChromosome(chrom);
+        individual.setStartPosition(0,0);
         int[] decimalsFromChromosome = individual.parseChromosomeToDecimal();
         int testElement = decimalsFromChromosome[1]; // expecting 0
 
-        Square expectedDirection = new Square(1, -2);
+        Square expectedDirection = new Square(1, 2);
         Square actualDirection = individual.getDirections().get(testElement);
         assertEquals(expectedDirection, actualDirection);
 

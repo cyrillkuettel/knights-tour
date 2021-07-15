@@ -1,5 +1,7 @@
 package Genetic_Algorithm;
 
+import Backtracking.Square;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -12,6 +14,13 @@ public class Population {
         this.population = new Individual[populationSize];
     }
 
+
+    public Population(int populationSize, int chromosomeLength, Square startSquare) {
+        this.population = new Individual[populationSize];
+        for (int i = 0; i < populationSize; i++) {
+            population[i] = new Individual(startSquare, chromosomeLength); // Population randomly initialized
+        }
+    }
 
     public Individual getFittestIndividual(int offset) {
         Individual[] sortedIndividuals = Arrays.copyOf(population, population.length);
@@ -39,5 +48,9 @@ public class Population {
 
     public void setPopulation(Individual[] population) {
         this.population = population;
+    }
+
+    public Individual[] getPopulation() {
+        return population;
     }
 }
