@@ -1,6 +1,5 @@
 package Backtracking;
 
-import org.junit.jupiter.api.Assertions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,10 +108,12 @@ public final class Search {
             // System.out.println(theWalkedPath);
             Square nextSquare = theWalkedPath.peek(); // the latest move.
             if (WalkedPathUtils.hasDuplicates(theWalkedPath)) {
-                throw new Exception("Fatal: spotted duplicates:\n" + WalkedPathUtils.getDuplicates(theWalkedPath));
+                throw new Exception("Fatal: spotted duplicates:\n"
+                        + WalkedPathUtils.getDuplicates(theWalkedPath));
             }
 
-            List<Square> candidates = WalkedPathUtils.filterVisitedSquares(map.get(nextSquare), theWalkedPath);
+            List<Square> candidates = WalkedPathUtils.filterVisitedSquares(
+                    map.get(nextSquare), theWalkedPath);
 
             // Neat trick:
             // prioritize moves with the lowest number of onward moves.
@@ -160,6 +161,18 @@ public final class Search {
      */
 
     public String codeWalkedPathToBitString(Stack<Square> theWalkedPath) {
+
+        final Stack<Square> cleanedWalkedPath = new Stack<>();
+        Square first = theWalkedPath.firstElement();
+        System.out.println();
+        System.out.println("starting Square: " + first);
+        for (Square el : theWalkedPath) {
+            if (el != first) {
+                cleanedWalkedPath.add(el);
+            }
+        }
+
+
         System.out.println();
         Map<Integer, Square> directions;
         ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
@@ -171,34 +184,49 @@ public final class Search {
                         .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
 
+
+
+        Square previousElement = first;
         Square currentElement;
-        Square previous = theWalkedPath.firstElement();
         StringBuilder bitStringBuilder = new StringBuilder();
 
-       for (Square el : theWalkedPath) {
-           currentElement = el;
-           if (currentElement != theWalkedPath.firstElement()) { // skip first iteration
 
-               int x0 = previous.getX();
-               int y0 = previous.getY();
-               int x1 = currentElement.getX();
-               int y1 = currentElement.getY();
-               int diffX = x1 - x0;
-               int diffY = y1 - y0;
-               Square differenceSquare = new Square(diffX, diffY);
-               //  System.out.printf(" %s -> %s",
-               //         directionsInversed.get(differenceSquare), differenceSquare.toString());
-               bitStringBuilder.append(Integer.toBinaryString(directionsInversed.get(differenceSquare)));
-               previous = currentElement;
-           }
+        int count = 0;
+        for (Square el : cleanedWalkedPath) {
+            currentElement = el;
+                int x0 = previousElement.getX();
+                int y0 = previousElement.getY();
+                int x1 = currentElement.getX();
+                int y1 = currentElement.getY();
+                int diffX = x1 - x0;
+                int diffY = y1 - y0;
+                Square differenceSquare = new Square(diffX, diffY);
+                /*
+                System.out.println(previousElement);
+                System.out.println(currentElement);
+                System.out.println(differenceSquare);
+                System.out.println();
 
-       }
+                        * 4 * 3 *
+                        5 * * * 2
+                        * * X * *
+                        6 * * * 1
+                        * 7 * 0 *
+         */
+                StringBuilder binString = new StringBuilder(Integer.toBinaryString(directionsInversed.get(differenceSquare)));
+                while (binString.length() < 3) {
+                    binString.insert(0, "0"); // insert at the beginning
+                }
+                bitStringBuilder.append(binString);
+                previousElement = currentElement;
+                count++;
+        }
+        System.out.printf("count = %d%n",count);
+        System.out.printf("BitString Length = %s", bitStringBuilder.toString().length());
         System.out.println();
         System.out.format("Starting Square: %d | %d ", startPosX, startPosY);
         return bitStringBuilder.toString();
     }
-
-
 
 
     public String[][] convertIntArrayToStringArray(int[][] input) {

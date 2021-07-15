@@ -21,18 +21,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PopulationTest {
 
+    @Test
     public void testGetFittestIndividual() {
+
+        // testing three Individuals:
+        // 1.) Has fitness of 0, the 2.) has fitness of 4. 3rd has fitness of 63
+
         final int popSize = 3;
         Population pop = new Population(popSize);
-        Individual[] population = new Individual[popSize];
+        Individual[] tpopulation = new Individual[popSize];
 
-        population[0] = new Individual(); //
-        population[0].setChromosome("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        population[0].setStartPosition(7,7);
+        tpopulation[0] = new Individual(); // lowest fitness
+        tpopulation[0].setChromosome("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+        tpopulation[0].setStartPosition(7,7);
 
-        population[1] = new Individual(); //5 0 7
-        population[1].setChromosome("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        population[1].setStartPosition(2,1);
+        tpopulation[1] = new Individual();
+        String firstfourShouldBeValid = "1010001110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        tpopulation[1].setChromosome(firstfourShouldBeValid);
+        tpopulation[1].setStartPosition(2,1);
+
+        String validSequence = "011001010001111000111101110101011000110011100011010001010111000111110011001110101110100011100001000011000010100101110101000011001010000110000000101110101100001011000101011000011000101111100";
+        validSequence += "000"; // to fill up the last by with an arbitrary number, I always ignore the last
+        tpopulation[2] = new Individual();
+        tpopulation[2].setChromosome(validSequence);
+        tpopulation[2].setStartPosition(0,2);
+        pop.setPopulation(tpopulation);
+       assertEquals(tpopulation[2], pop.getFittestIndividual(0));
+       assertEquals(tpopulation[1], pop.getFittestIndividual(1));
+       assertEquals(tpopulation[0], pop.getFittestIndividual(2));
 
 
 
