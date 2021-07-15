@@ -99,10 +99,10 @@ public class IndividualTest {
         //                    100101100101
         final String chrom = "100101100101100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100";
         individual.setChromosome(chrom);
-        individual.setStartPosition(5,3);    // starting a test from Square (5|3)
+        individual.setStartPosition(7,7);    // starting a test from Square (5|3)
 
         int fitness = individual.FitnessFunction();
-        assertEquals(4, fitness);    // should yield 7 because each move is possible
+        assertEquals(4, fitness);
 
     }
 

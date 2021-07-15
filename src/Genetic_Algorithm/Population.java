@@ -13,22 +13,13 @@ public class Population {
     }
 
 
-    public Population(int populationSize,  int chromosomeLength) {
-        this.population = new Individual[populationSize];
-
-    }
-
     public Individual getFittestIndividual(int offset) {
         Individual[] sortedIndividuals = Arrays.copyOf(population, population.length);
 
-        Arrays.sort(sortedIndividuals, new Comparator<Individual>() {
-
-            @Override
-            public int compare(Individual o1, Individual o2) {
-                int f1 = o1.getFitness();
-                int f2 = o2.getFitness();
-                return Integer.compare(f1, f2);
-            }
+        Arrays.sort(sortedIndividuals, (o1, o2) -> {
+            int f1 = o1.getFitness();
+            int f2 = o2.getFitness();
+            return Integer.compare(f1, f2);
         });
         return sortedIndividuals[sortedIndividuals.length-1-offset];
     }

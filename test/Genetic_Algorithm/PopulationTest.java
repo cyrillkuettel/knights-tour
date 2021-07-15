@@ -24,12 +24,13 @@ public class PopulationTest {
     @Test
     public void testGetFittestIndividual() {
 
-        // testing three Individuals:
+        // testing three Individuals, each consecutive has less fitness.
         // 1.) Has fitness of 0, the 2.) has fitness of 4. 3rd has fitness of 63
 
         final int popSize = 3;
         Population pop = new Population(popSize);
         Individual[] tpopulation = new Individual[popSize];
+
 
         tpopulation[0] = new Individual(); // lowest fitness
         tpopulation[0].setChromosome("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
@@ -46,6 +47,7 @@ public class PopulationTest {
         tpopulation[2].setChromosome(validSequence);
         tpopulation[2].setStartPosition(0,2);
         pop.setPopulation(tpopulation);
+
        assertEquals(tpopulation[2], pop.getFittestIndividual(0));
        assertEquals(tpopulation[1], pop.getFittestIndividual(1));
        assertEquals(tpopulation[0], pop.getFittestIndividual(2));
