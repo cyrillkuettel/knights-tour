@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 
 import java.util.Arrays;
+import java.util.Stack;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -56,6 +58,19 @@ public class testRouletteWheelTest {
         System.out.println(Arrays.toString(resultAfterAddingDuplicates));
         assertTrue(test.sumOfProbabilityIsOne(test.computeNewProbability(structure)));
 
+    }
+
+    @Test
+    public void testStack() {
+        Stack<Integer> stack = new Stack<>();
+        stack.add(1);
+        stack.add(2);
+        stack.add(3);
+
+        int first = stack.firstElement();
+        assertEquals(1, first);
+        int last = stack.lastElement();
+        assertEquals(3, last);
     }
 
 

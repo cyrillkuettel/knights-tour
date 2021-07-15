@@ -11,15 +11,15 @@ import java.util.stream.Collectors;
 import static java.lang.System.exit;
 
 public final class Search {
-    private  final int BOARD_LEN;
-    private  final int startPosX;
-    private  final int startPosY;
+    private final int BOARD_LEN;
+    private final int startPosX;
+    private final int startPosY;
 
 
     private final Map<Square, List<Square>> map; // maps coordinate to List of possible moves
     private final int[][] board;
 
-    public Search(final int startPosX, final int startPosY, final int BOARDSIZE)  {
+    public Search(final int startPosX, final int startPosY, final int BOARDSIZE) {
         this.startPosX = startPosX;
         this.startPosY = startPosY;
         this.BOARD_LEN = BOARDSIZE;
@@ -28,11 +28,12 @@ public final class Search {
         this.map = validknightMoves.getMap();
     }
 
-    public Search(final int startPosX, final int startPosY)  {
+    public Search(final int startPosX, final int startPosY) {
         this(startPosX, startPosY, 8);
     }
 
     long start;
+
     public void startSearch() throws Exception {
         Square startSquare = new Square(startPosX, startPosY);
         Stack<Square> walkedPath = new Stack<>();
@@ -43,7 +44,7 @@ public final class Search {
     }
 
     /**
-     *  Squares are ordered based on how many onward moves there are from a square. (The less, the better,)
+     * Squares are ordered based on how many onward moves there are from a square. (The less, the better,)
      */
     public class SquareMovesComparator implements Comparator<Square> {
         @Override
@@ -55,9 +56,9 @@ public final class Search {
 
             // don't count Backtracking.Square already visited
 
-            square1_onward_moves = square1_onward_moves.stream().filter( element ->
+            square1_onward_moves = square1_onward_moves.stream().filter(element ->
                     (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
-            square2_onward_moves = square2_onward_moves.stream().filter( element ->
+            square2_onward_moves = square2_onward_moves.stream().filter(element ->
                     (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
 
             int len1 = square1_onward_moves.size();
@@ -68,17 +69,16 @@ public final class Search {
 
 
     /**
-     *
      * This is the Backtracking algorithm. If there is a tour, it will find the tour.
      * It basically checks all moves, recursively starting a new search in every iteration.
      * If a move does not lead to a solution, it removes the square from the path (Stack).
+     *
      * @param theWalkedPath Behaves like a history. And as we all know, history is written by the winners.
      * @return Solution to the knight's tour.
      * @throws Exception Throws Exception if one square is present more than once.
      */
 
     // My suggestion is that PriorityQueue will improve performance, because you have very fast access to the top element
-
     public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (foundSolution(theWalkedPath)) {
@@ -87,6 +87,7 @@ public final class Search {
             prettyPrinter.print(convertIntArrayToStringArray(board));
             long end = System.currentTimeMillis();
             System.out.format("Total time of computation: %d ms", (end - start));
+            System.out.println(codeWalkedPathToBitString(theWalkedPath));
 
             JFrame jf = new JFrame();
             jf.setSize(700, 700);
@@ -98,14 +99,14 @@ public final class Search {
             jf.setVisible(true);
 
 
-           //  throw new Backtracking.FoundSolutionException(); // I know this is ugly.
+            //  throw new Backtracking.FoundSolutionException(); // I know this is ugly.
             // Otherwise, it will search endlessly for solutions, and possibly crash your pc.
             exit(0);
             return true;
 
 
         } else {
-           // System.out.println(theWalkedPath);
+            // System.out.println(theWalkedPath);
             Square nextSquare = theWalkedPath.peek(); // the latest move.
             if (WalkedPathUtils.hasDuplicates(theWalkedPath)) {
                 throw new Exception("Fatal: spotted duplicates:\n" + WalkedPathUtils.getDuplicates(theWalkedPath));
@@ -120,7 +121,7 @@ public final class Search {
             // this phenomenon is particularly observable for big boards
             candidates.sort(new SquareMovesComparator());
 
-            candidates.forEach( possibleMove -> {
+            candidates.forEach(possibleMove -> {
 
                 if (possibleMove == null) {
                     System.out.println("got here");
@@ -139,7 +140,7 @@ public final class Search {
 
                 board[possibleMove.getX()][possibleMove.getY()] = 0;
                 theWalkedPath.remove(possibleMove);
-                 //possibleMove = null;
+                //possibleMove = null;
             });
             return false; // if all the moves failed
         }
@@ -147,32 +148,56 @@ public final class Search {
     }
 
     public boolean foundSolution(Stack<Square> theWalkedPath) {
-        return theWalkedPath.size() == (BOARD_LEN*BOARD_LEN);
+        return theWalkedPath.size() == (BOARD_LEN * BOARD_LEN);
     }
 
 
     /**
      * helper function which provides valid chromosomes ( sequence of moves coded as BitStrings)
      * Used for testing in Genetic Algorithm
-     * @return
+     *
+     * @return BitString with 64 Valid moves
      */
+
     public String codeWalkedPathToBitString(Stack<Square> theWalkedPath) {
-        // calculate differences between
-        Iterator<Square> it = theWalkedPath.iterator();
+        System.out.println();
+        Map<Integer, Square> directions;
+        ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
+        directions = validKnightMoves.getDirections();
+        Map<Square, Integer> directionsInversed;
+        directionsInversed =
+                directions.entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
 
-/*
-        Assertions.assertEquals(previous.getX(), startPosX);
-        Assertions.assertEquals(previous.getY(), startPosY);
-*/
-        while (it.hasNext()) {
-            Square current = it.next();
-            int x = current.getX();
-            int y = current.getY();
+        Square currentElement;
+        Square previous = theWalkedPath.firstElement();
+        StringBuilder bitStringBuilder = new StringBuilder();
 
-        }
+       for (Square el : theWalkedPath) {
+           currentElement = el;
+           if (currentElement != theWalkedPath.firstElement()) { // skip first iteration
 
+               int x0 = previous.getX();
+               int y0 = previous.getY();
+               int x1 = currentElement.getX();
+               int y1 = currentElement.getY();
+               int diffX = x1 - x0;
+               int diffY = y1 - y0;
+               Square differenceSquare = new Square(diffX, diffY);
+               //  System.out.printf(" %s -> %s",
+               //         directionsInversed.get(differenceSquare), differenceSquare.toString());
+               bitStringBuilder.append(Integer.toBinaryString(directionsInversed.get(differenceSquare)));
+               previous = currentElement;
+           }
+
+       }
+        System.out.println();
+        System.out.format("Starting Square: %d | %d ", startPosX, startPosY);
+        return bitStringBuilder.toString();
     }
+
 
 
 
@@ -180,7 +205,7 @@ public final class Search {
         String[][] boardString = new String[BOARD_LEN][BOARD_LEN];
 
         for (int i = 0; i < input.length; i++) {
-            for ( int j = 0; j < input[i].length; j++) {
+            for (int j = 0; j < input[i].length; j++) {
                 boardString[i][j] = " " + String.valueOf(input[i][j]) + " ";
             }
         }
