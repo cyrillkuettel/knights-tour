@@ -40,9 +40,7 @@ public class Population {
 
     /*
      I can write the system.
-     I will write the repair function. The only thing that's still not clear for me at the moment, is how long is the
-     initial size of the Bitstring? I think size is always constant in the paper. Repair is only happening on
-     the first string
+     I will write the repair function. This can improve performance.
 
      */
 
@@ -50,7 +48,30 @@ public class Population {
         this.population = population;
     }
 
-    public Individual[] getPopulation() {
+    public Individual[] getIndividuals() {
         return population;
+    }
+
+    public void sumOverallFitness() {
+        int count = 0;
+        for (Individual e: getIndividuals() ) {
+            count+= e.FitnessFunction();
+        }
+        setPopulationFitness(count);
+    }
+
+    public void setPopulationFitness(int populationFitness) {
+        this.populationFitness = populationFitness;
+    }
+
+    public int getPopulationFitness() {
+        return populationFitness;
+    }
+
+    @Override
+    public String toString() {
+        return "Population { populationFitness=" + populationFitness +
+                "population=" + Arrays.toString(population) +
+                '}';
     }
 }

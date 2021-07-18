@@ -7,6 +7,7 @@ import Backtracking.ValidKnightMoves;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class Individual {
@@ -31,6 +32,7 @@ public final class Individual {
     private int fitness;
     private int chromosomeLength;
     private Square startPosition;
+
     private static final ValidKnightMoves validKnightMoves = new ValidKnightMoves(World.BOARD_LEN);
     private static final Map<Integer, Square> directions = validKnightMoves.getDirections();
     private static final Map<Square, List<Square>> map = validKnightMoves.getMap();
@@ -173,8 +175,10 @@ public final class Individual {
 
     @Override
     public String toString() {
+       String str = Arrays.stream(chromosome).boxed().map(Object::toString)
+                                                .collect(Collectors.joining(""));
         return "Individual{" +
-                "chromosome=" + Arrays.toString(chromosome) +
-                '}';
+                "chromosome=" + str +
+                '}'+'\n';
     }
 }

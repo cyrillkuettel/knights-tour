@@ -70,7 +70,8 @@ public final class Search {
     /**
      * This is the Backtracking algorithm. If there is a tour, it will find the tour.
      * It basically checks all moves, recursively starting a new search in every iteration.
-     * If a move does not lead to a solution, it removes the square from the path (Stack).
+     * If a move does not lead to a solution, it removes the square from the path (Stack). Then it
+     * proceeds with the next candidate move.
      *
      * @param theWalkedPath Behaves like a history. And as we all know, history is written by the winners.
      * @return Solution to the knight's tour.
@@ -154,10 +155,10 @@ public final class Search {
 
 
     /**
-     * helper function which provides valid chromosomes ( sequence of moves coded as BitStrings)
-     * Used for testing in Genetic Algorithm
-     *
-     * @return BitString with 64 Valid moves
+     * Very simple function which just translates a WalkedPath<Square> to BitStrin (sequence
+     * of moves coded as BitStrings)
+     * Only used for testing purposes in Genetic Algorithm tests
+     * @return BitString with 63 Valid moves
      */
 
     public String codeWalkedPathToBitString(Stack<Square> theWalkedPath) {
@@ -172,7 +173,6 @@ public final class Search {
             }
         }
 
-
         System.out.println();
         Map<Integer, Square> directions;
         ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
@@ -183,13 +183,9 @@ public final class Search {
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
-
-
-
         Square previousElement = first;
         Square currentElement;
         StringBuilder bitStringBuilder = new StringBuilder();
-
 
         int count = 0;
         for (Square el : cleanedWalkedPath) {
@@ -206,12 +202,6 @@ public final class Search {
                 System.out.println(currentElement);
                 System.out.println(differenceSquare);
                 System.out.println();
-
-                        * 4 * 3 *
-                        5 * * * 2
-                        * * X * *
-                        6 * * * 1
-                        * 7 * 0 *
          */
                 StringBuilder binString = new StringBuilder(Integer.toBinaryString(directionsInversed.get(differenceSquare)));
                 while (binString.length() < 3) {

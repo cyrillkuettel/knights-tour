@@ -1,8 +1,7 @@
 # knights-tour
 
 # What is a knight's tour?
-## (classic problem)
-It's a series of moves of a chess knight that visits all squares on the board exactly once.
+(classic problem) It's a series of moves of a chess knight that visits all squares on the board exactly once.
  
 # How can I run it?
 1. Clone the project.
