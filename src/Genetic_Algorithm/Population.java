@@ -36,6 +36,9 @@ public class Population {
         return sortedIndividuals[sortedIndividuals.length-1-offset];
     }
 
+     // very primitive. This simply selects half of the parents.
+     // @return the 25 most fit parents
+
     public Individual[] selectParents() {
         Individual[] sortedIndividuals = Arrays.copyOf(population, population.length);
 
@@ -72,7 +75,7 @@ public class Population {
     public void sumOverallSimpleFitness() {
         double count = 0;
         for (Individual ind: getIndividuals() ) {
-            count+= ind.simpleFitnessFunction();
+            count += ind.simpleFitnessFunction();
         }
         this.summedSimpleFitness = count;
     }

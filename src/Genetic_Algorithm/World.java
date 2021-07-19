@@ -71,6 +71,13 @@ public final class World {
         return population.selectParents();
     }
 
+    private Individual[] selectParentsRouletteWheel(Population population) {
+        Individual[] individals = population.getIndividuals();
+        // cummultative Probability.
+
+
+    }
+
     private void evaluatePopulation(Population population) {
         population.sumOverallSimpleFitness();
     }
