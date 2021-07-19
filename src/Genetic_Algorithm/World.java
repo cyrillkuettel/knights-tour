@@ -20,66 +20,75 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class World {
     private static final int POPULATION_SIZE = 50;
     public static final int BOARD_LEN = 8;
-    public static final int CHROM_LEN =  192;
-    private static final Square startSquare = new Square(0,0);
+    public static final int CHROM_LEN = 192;
+    public static final double pMutation = 0.01;
+    public static final double pCrossover = 0.8;
+
+    private static final Square startSquare = new Square(0, 0);
     private Population[] population;
 
     public static void main(String[] args) {
         new World();
     }
 
+    int generation;
+
     public World() {
 
+        Individual[] parents;
         population = new Population[100];
-        int generation = 0;
+        generation = 0;
         population[generation] = initializePopulation();
 
         evaluatePopulation(population[generation]);
         System.out.println(population[generation].toString());
-    /*
-        while (isTerminationConditionMet(generation)) {
+
+        while (isTerminationConditionMet()) {
+            parents = selectParents(population[generation]);
+            /*
+            population[generation + 1] = crossover(parents);
+            population[generation + 1] = mutate(population[generation + 1]);
+            evaluatePopulation(population[generation]);
+            */
+
+            generation++;
+        }
+    }
+
+    public Individual[] crossOver(Individual[] parents) {
+       /*
+        if (flip(pCrossover)) {
+            Individual[] children = parents;
 
         }
+        }
 
-     */
+        */
+    return null;
+    }
+
+    private Individual[] selectParents(Population population) {
+        return population.selectParents();
     }
 
     private void evaluatePopulation(Population population) {
-        population.sumOverallFitness();
+        population.sumOverallSimpleFitness();
     }
 
     public Population initializePopulation() {
         return new Population(POPULATION_SIZE, CHROM_LEN, startSquare);
     }
 
-    public boolean isTerminationConditionMet(int count) {
-        if (count == population.length-1) {
-            return true;
-        }
-        return false;
+    public boolean isTerminationConditionMet() {
+        // very simple, I will change this in the future.
+        return generation < 100;
     }
 
 
 
-
-
-
-    // lchrom: current Length of chromosome
-    public String[] crossover(String parent1, String parent2, double pCrossover, int lchrom) {
-
-        return null;
+    public boolean flip(double p) {
+        return ThreadLocalRandom.current().nextDouble() < p;
     }
 
-
-
-
-    /**
-     * function select implements roulette wheel selection
-     *
-     */
-    // the question is now, should all the parameters be type Individual or something else.
-    public void select() {
-
-    }
 
 }

@@ -8,6 +8,7 @@ import Backtracking.ValidKnightMoves;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public final class Individual {
@@ -171,6 +172,15 @@ public final class Individual {
 
     public Map<Integer, Square> getDirections() {
         return directions;
+    }
+
+    /**
+     * How many 1's there are in the chromosome.
+     * @return relative Fitness
+     */
+    public double simpleFitnessFunction() {
+        final double v = (double) IntStream.of(chromosome).sum() / chromosomeLength;
+        return v;
     }
 
     @Override

@@ -17,7 +17,7 @@ public class testRouletteWheel {
 
     List<String[]> allStructures = new ArrayList<>();
     List<Double[]> allProbabilities = new ArrayList<>();
-
+    Map<String, Double> probabilityMap;
     // some values for testing
     Double[] probability = new Double[]{0.1, 0.2, 0.05, 0.15, 0.0, 0.11, 0.07, 0.04, 0.00, 0.12, 0.16};
     String[] structure = new String[]{"00001100",
@@ -32,7 +32,10 @@ public class testRouletteWheel {
             "01001101",
             "01001001"};
 
-    Map<String, Double> probabilityMap;
+    public static void main(String[] args) {
+        new testRouletteWheel();
+    }
+
 
     // my error:
         // I have wrongfully assumed, that probability can just be mapped in each successive Iteration.
@@ -41,21 +44,13 @@ public class testRouletteWheel {
         // Therefore, I need to change the assignment of newProbability. for the duplicates,
         // the initial probability has to be multiplied, I think. The Map can't be used like this.
 
-    /**
-     * used for Testing
-     * @param test Indicates test
-     */
-    testRouletteWheel(String test) {
-        probabilityMap = new HashMap<>();
-        probabilityMap = IntStream.range(0, structure.length).boxed() // Map String[] to Double[]
-                .collect(Collectors.toMap(i -> structure[i], i -> probability[i]));
-    }
+
     testRouletteWheel() {
         probabilityMap = new HashMap<>();
         probabilityMap = IntStream.range(0, structure.length).boxed() // Map String[] to Double[]
                 .collect(Collectors.toMap(i -> structure[i], i -> probability[i]));
 
-       double[] cumultativeProbability =  computeCumultativeProbability(probability); // this changes for each Iteration
+       double[] cumulativeProbability =  computeCumultativeProbability(probability); // this changes for each Iteration
 
         // start Values
         allStructures.add(structure);
@@ -65,7 +60,7 @@ public class testRouletteWheel {
             String[] newStructure = new String[POPULATION_SIZE];
             Double[] newProbability = new Double[POPULATION_SIZE];
             for (int j = 0; j < POPULATION_SIZE; j++) { // spin the wheel for each Individual
-                int Weightedindex = spinRouletteWheel(cumultativeProbability);
+                int Weightedindex = spinRouletteWheel(cumulativeProbability);
                 newStructure[j] = structure[Weightedindex];
 
                 // newProbability[j] = probabilityMap.get(newStructure[j]);
@@ -85,48 +80,34 @@ public class testRouletteWheel {
 
     }
 
-    public Double[] computeNewProbability(String[] chromosomes) {
-        /*
-        List<String> list = Arrays.stream(chromosomes).collect(Collectors.toList());
-        Map<String, Long> wordCountForEachItem =
-                list.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        */
-
-
-
-
-        // Methodology: Find duplicates and multiply their initial probability with their num_of_occurences.
-            Double[] occurences = new Double[chromosomes.length];
-        for (int i = 0; i < chromosomes.length; i++) {
-            String chrom = chromosomes[i];
-
-            Double occured = 0.0;
-            for (String chromosome : chromosomes) {
-                if (chromosome.equals(chrom)) {
-                    occured++;
-                }
-            }
-            Double initialProbability = probabilityMap.get(chrom);
-            occurences[i] = initialProbability * occured;
-        }
-        return occurences;
+    /**
+     * used for Testing
+     * @param test Indicates test
+     */
+    testRouletteWheel(String test) {
+        probabilityMap = new HashMap<>();
+        probabilityMap = IntStream.range(0, structure.length).boxed() // Map String[] to Double[]
+                .collect(Collectors.toMap(i -> structure[i], i -> probability[i]));
     }
 
+
+
+
     public void generateReport() {
-        // Count occurences of strings.
-        int[] occurences = countOccurencesForAllStrings();
-        double[] relativeOccurences = new double[POPULATION_SIZE];
+        // Count occurrences of strings.
+        int[] occurrences = countOccurencesForAllStrings();
+        double[] relativeOccurrences = new double[POPULATION_SIZE];
 
         // Finally, normalize values of frequency per String
-        double divisor = (double) (POPULATION_SIZE * ITERATIONS);
-        for (int i = 0; i < relativeOccurences.length; i++) {
-            relativeOccurences[i] =  round(occurences[i] / divisor, 4);
+        double divisor = (POPULATION_SIZE * ITERATIONS);
+        for (int i = 0; i < relativeOccurrences.length; i++) {
+            relativeOccurrences[i] =  round(occurrences[i] / divisor, 4);
         }
 
         // They should be roughly equal to the expected value
-        System.out.println(Arrays.toString(occurences));
+        System.out.println(Arrays.toString(occurrences));
         System.out.println(Arrays.toString(probability));
-        System.out.println(Arrays.toString(relativeOccurences));
+        System.out.println(Arrays.toString(relativeOccurrences));
     }
 
     /**
@@ -207,8 +188,29 @@ public class testRouletteWheel {
     }
 
 
-    public static void main(String[] args) {
-        new testRouletteWheel();
+    // this is a bad Idea. This kind of strucure will note be used in a realistic setting.
+    public Double[] computeNewProbability(String[] chromosomes) {
+        /*
+        List<String> list = Arrays.stream(chromosomes).collect(Collectors.toList());
+        Map<String, Long> wordCountForEachItem =
+                list.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        */
+        // Methodology: Find duplicates and multiply their initial probability with their num_of_occurences.
+        Double[] occurrences = new Double[chromosomes.length];
+        for (int i = 0; i < chromosomes.length; i++) {
+            String chrom = chromosomes[i];
+
+            Double occured = 0.0;
+            for (String chromosome : chromosomes) {
+                if (chromosome.equals(chrom)) {
+                    occured++;
+                }
+            }
+            Double initialProbability = probabilityMap.get(chrom);
+            occurrences[i] = initialProbability * occured;
+        }
+        return occurrences;
     }
+
 
 }
