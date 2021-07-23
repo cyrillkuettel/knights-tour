@@ -2,6 +2,10 @@ package Genetic_Algorithm;
 
 import Backtracking.Square;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
             /*
         1: generation = 0;
@@ -38,13 +42,13 @@ public final class World {
         Individual[] parents;
         population = new Population[100];
         generation = 0;
-        population[generation] = initializePopulation();
+        population[generation] = initializePopulation(); // randomly assigns variables
 
         evaluatePopulation(population[generation]);
         System.out.println(population[generation].toString());
 
         while (isTerminationConditionMet()) {
-            parents = selectParents(population[generation]);
+            parents = selectBetterHalfOfParents(population[generation]);
             /*
             population[generation + 1] = crossover(parents);
             population[generation + 1] = mutate(population[generation + 1]);
@@ -55,7 +59,34 @@ public final class World {
         }
     }
 
+    // crossover based on single random point
     public Individual[] crossOver(Individual[] parents) {
+        Individual[] children = new Individual[parents.length];
+
+        Stack<Individual> stackToBeMated = new Stack<>();
+        Arrays.stream(parents).parallel().forEach(stackToBeMated::push);
+        // change this so that parents are randomly selected
+        if (stackToBeMated.size() % 2  != 0) {
+            throw new IllegalArgumentException("Indiviual[] parents has to be of even length");
+        }
+        Individual parent1 =
+        while (!stackToBeMated.isEmpty()) {
+            Individual p1 = stackToBeMated.pop();
+            Individual p2 = stackToBeMated.pop();
+            int len = p1.getChromosome().length;
+            int selectedCrossoverPoint = ThreadLocalRandom.current().nextInt(0,len );
+            // simple: swapping substrings
+
+        }
+
+
+        // loop through parents:
+        // select two random parents
+        // crossover, add the new Individual to return arrray
+        // repeat until all parents are mated.
+
+
+
        /*
         if (flip(pCrossover)) {
             Individual[] children = parents;
@@ -67,13 +98,16 @@ public final class World {
     return null;
     }
 
-    private Individual[] selectParents(Population population) {
+    private Individual[] selectBetterHalfOfParents(Population population) {
         return population.selectParents();
     }
 
+
+    // TODO: write the roulette function.
     private Individual[] selectParentsRouletteWheel(Population population) {
         Individual[] individals = population.getIndividuals();
-        // cummultative Probability.
+        // cumulative Probability.
+        return null;
 
 
     }

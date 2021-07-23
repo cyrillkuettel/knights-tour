@@ -24,8 +24,8 @@ public final class Individual {
             0     1    2    3    4    5    6    7
             000, 001, 010, 011, 100, 101, 110, 111
 
-            The chromosome codes for this path. Each 8-bit number represents a direction from the previous square.
-            Staring Square is given. The chromosome only codes *where* to move, not from where
+            Each 8-bit number represents a direction from the previous square.
+            Staring Square is always given.
      */
 
     private int[] chromosome;
@@ -175,7 +175,7 @@ public final class Individual {
     }
 
     /**
-     * How many 1's there are in the chromosome.
+     * How many 1's there are in the chromosome. -> Relative Probability
      * @return relative Fitness
      */
     public double simpleFitnessFunction() {

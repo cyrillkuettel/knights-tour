@@ -7,8 +7,9 @@ import java.util.Comparator;
 
 public class Population {
 
-    private  Individual[] population;
+    private Individual[] population;
     private int populationFitness = -1;
+
 
     // for testing purposes
     private double summedSimpleFitness = 0;
@@ -25,6 +26,8 @@ public class Population {
         }
     }
 
+
+
     public Individual getFittestIndividual(int offset) {
         Individual[] sortedIndividuals = Arrays.copyOf(population, population.length);
 
@@ -36,9 +39,10 @@ public class Population {
         return sortedIndividuals[sortedIndividuals.length-1-offset];
     }
 
-     // very primitive. This simply selects half of the parents.
-     // @return the 25 most fit parents
-
+    /*
+          very primitive. This simply selects half of the parents.
+          @return the 25 most fit parents
+     */
     public Individual[] selectParents() {
         Individual[] sortedIndividuals = Arrays.copyOf(population, population.length);
 
@@ -53,14 +57,10 @@ public class Population {
         return parents;
     }
 
-    // get fittest
-    // get Individual
-    // getPopulationFitness
-
-
     /*
      I can write the system.
      I will write the repair function. This can improve performance.
+     In fact, it may not work without the repair function.
 
      */
 
@@ -79,8 +79,6 @@ public class Population {
         }
         this.summedSimpleFitness = count;
     }
-
-
 
     public void setPopulationFitness(int populationFitness) {
         this.populationFitness = populationFitness;
