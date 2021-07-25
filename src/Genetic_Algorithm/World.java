@@ -3,8 +3,6 @@ package Genetic_Algorithm;
 import Backtracking.Square;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
             /*
