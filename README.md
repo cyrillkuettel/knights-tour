@@ -1,11 +1,12 @@
 # What's knight's tour?
-It's a series of moves of a chess knight that visits all squares on the board exactly once. (classic problem)
+The knight's tour is series of moves of a chess knight that visits all squares on the board exactly once. It's a classical combinatorics problem. 
 Many algorithms and heuristics have been developed to solve this problem. 
 I implemented depth-first search, with a backtracking approach. I'm currently writing different algorithms to solve the problem of knigh's tour.
+
 The important key insight was:
- > Always choose the square with the minimum number of onward moves. 
+For each step, always visit the square with the _minimum number of onward moves_ first. This increases performance tremendously when compared with random selection.
  
-This simple priority queue idea has reduced runtime dramatically.
+This simple priority queue idea has made all the difference, reducing the total runtime from a 10 seconds to 50ms (!)
 
 # How to build this application?
 1. Clone the project.
