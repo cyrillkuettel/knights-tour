@@ -1,6 +1,8 @@
 # What's knight's tour?
 The knight's tour is series of moves of a chess knight that visits all squares on the board exactly once. It's a classical combinatorics problem. 
 Many algorithms and heuristics have been developed to solve this problem. 
+![Preview](https://github.com/cyrillkuettel/knights-tour/blob/main/demo.png?raw=true)
+
 I implemented depth-first search, with a backtracking approach. I'm currently writing different algorithms to solve the problem of knigh's tour.
 
 The important key insight was:
@@ -13,7 +15,7 @@ This simple priority queue idea has made all the difference, reducing the total 
 2. Locate the class [demoSearch](src/Backtracking/demoSearch.java). This is the driver class. You can set the starting position (x,y) of the Knight. Default board size is 8x8. This, too can be changed. 
 3. To see the visualization, use [ChessBoard](src/Backtracking/ChessBoard.java) class. This is experimental. There are some issues with saving the image. 
 
-![Preview](https://github.com/cyrillkuettel/knights-tour/blob/main/demo.png?raw=true)
+
 
 
 # TODO
