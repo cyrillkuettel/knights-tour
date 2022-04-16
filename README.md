@@ -11,7 +11,7 @@ For each step, always visit the square with the _minimum number of onward moves_
 This simple priority queue idea has made all the difference, reducing the total runtime from a 10 seconds to 50ms (!)
 
 # How to build this application?
-1. Clone the project.
+1. It's a plain java project. Just clone it and open it in your IDE.
 2. Locate the class [demoSearch](src/Backtracking/demoSearch.java). This is the driver class. You can set the starting position (x,y) of the Knight. Default board size is 8x8. This, too can be changed. 
 3. To see the visualization, use [ChessBoard](src/Backtracking/ChessBoard.java) class. This is experimental. There are some issues with saving the image. 
 
