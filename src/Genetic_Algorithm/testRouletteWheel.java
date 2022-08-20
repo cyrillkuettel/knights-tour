@@ -46,13 +46,11 @@ public class testRouletteWheel {
 
 
     testRouletteWheel() {
-        probabilityMap = new HashMap<>();
         probabilityMap = IntStream.range(0, structure.length).boxed() // Map String[] to Double[]
                 .collect(Collectors.toMap(i -> structure[i], i -> probability[i]));
 
-       double[] cumulativeProbability =  computeCumultativeProbability(probability); // this changes for each Iteration
+       double[] cumulativeProbability = computeCumultativeProbability(probability); // this changes for each Iteration
 
-        // start Values
         allStructures.add(structure);
         allProbabilities.add(probability);
 
@@ -111,11 +109,12 @@ public class testRouletteWheel {
     }
 
     /**
-     * Simulates the biased routlette wheel. Spins exactly one time.
-     * @param cumultativeProbability From the current population: all relative probabilities sequentially summed up.
-     * @return selected index of biased routlette wheel.
+     * Simulates the biased roulette wheel. Spins exactly one time.
+     * @param cumulativeProbability From the current population:
+     * all relative probabilities sequentially summed up.
+     * @return selected index of biased roulette wheel.
      */
-    private int spinRouletteWheel(double[] cumultativeProbability) {
+    private int spinRouletteWheel(double[] cumulativeProbability) {
         /*
         loop throuhgh your array with the cumulative sum values and find the first value that is bigger than your random value.
         The ID is the id of your individual.
@@ -124,15 +123,15 @@ public class testRouletteWheel {
          */
         int index;
 
-        OptionalDouble maxElement = DoubleStream.of(cumultativeProbability).max();
+        OptionalDouble maxElement = DoubleStream.of(cumulativeProbability).max();
         double max = maxElement.isPresent() ? maxElement.getAsDouble() : -1.0;
         double randomValue;
         if (max == -1.0) {throw new IllegalArgumentException("function spinRouletteWheel: input array empty?"); }
         do {
              randomValue = ThreadLocalRandom.current().nextDouble();
              index = -1;
-            for (int i = 0; i < cumultativeProbability.length; i++) {
-                if (cumultativeProbability[i] >= randomValue) {
+            for (int i = 0; i < cumulativeProbability.length; i++) {
+                if (cumulativeProbability[i] >= randomValue) {
                     index = i;
                     break;
                 }

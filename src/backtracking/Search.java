@@ -14,7 +14,6 @@ public final class Search {
     private final int startPosX;
     private final int startPosY;
 
-
     private final Map<Square, List<Square>> map; // maps coordinate to List of possible moves
     private final int[][] board;
 
@@ -42,30 +41,6 @@ public final class Search {
         findTour(walkedPath);
     }
 
-    /**
-     * Squares are ordered based on how many onward moves there are from a square. (The less, the better,)
-     */
-    public class SquareMovesComparator implements Comparator<Square> {
-        @Override
-        public int compare(Square o1, Square o2) {
-            ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
-
-            List<Square> square1_onward_moves = validKnightMoves.allPossibleMoves(o1.getX(), o1.getY());
-            List<Square> square2_onward_moves = validKnightMoves.allPossibleMoves(o2.getX(), o2.getY());
-
-            // don't count Backtracking.Square already visited
-
-            square1_onward_moves = square1_onward_moves.stream().filter(element ->
-                    (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
-            square2_onward_moves = square2_onward_moves.stream().filter(element ->
-                    (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
-
-            int len1 = square1_onward_moves.size();
-            int len2 = square2_onward_moves.size();
-            return Integer.compare(len1, len2);
-        }
-    }
-
 
     /**
      * This is the Backtracking algorithm. If there is a tour, it will find the tour.
@@ -74,12 +49,11 @@ public final class Search {
      * proceeds with the next candidate move.
      *
      * @param theWalkedPath Behaves like a history. And as we all know, history is written by the winners.
-     * @return Solution to the knight's tour.
      * @throws Exception Throws Exception if one square is present more than once.
      */
 
     // My suggestion is that PriorityQueue will improve performance, because you have very fast access to the top element
-    public boolean findTour(Stack<Square> theWalkedPath) throws Exception {
+    public void findTour(Stack<Square> theWalkedPath) throws Exception {
 
         if (foundSolution(theWalkedPath)) {
             System.out.println("found Solution! " + '\n' + theWalkedPath);
@@ -88,24 +62,13 @@ public final class Search {
             long end = System.currentTimeMillis();
             System.out.format("Total time of computation: %d ms", (end - start));
 
-            JFrame jf = new JFrame();
-            jf.setSize(700, 700);
-            jf.setTitle("Knight's Tour");
-            jf.getContentPane().add(new ChessBoard(theWalkedPath, 8));
-            jf.setLocationRelativeTo(null);
-            jf.setBackground(Color.WHITE);
-            jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            jf.setVisible(true);
-
+            setupJFrameBoilderplate(theWalkedPath);
 
             //  throw new Backtracking.FoundSolutionException(); // I know this is ugly.
-            // Otherwise, it will search endlessly for solutions, and possibly crash your pc.
+            // However, I've not found a good alternative to breaking out of the recursion.
             exit(0);
-            return true;
-
 
         } else {
-            // System.out.println(theWalkedPath);
             Square nextSquare = theWalkedPath.peek(); // the latest move.
             if (WalkedPathUtils.hasDuplicates(theWalkedPath)) {
                 throw new Exception("Fatal: spotted duplicates:\n"
@@ -138,25 +101,58 @@ public final class Search {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 board[possibleMove.getX()][possibleMove.getY()] = 0;
                 theWalkedPath.remove(possibleMove);
-                //possibleMove = null;
             });
-            return false; // if all the moves failed
         }
 
+    }
+
+    private void setupJFrameBoilderplate(Stack<Square> theWalkedPath) {
+        JFrame jf = new JFrame();
+        jf.setSize(700, 700);
+        jf.setTitle("Knight's Tour");
+        jf.getContentPane().add(new ChessBoard(theWalkedPath, 8));
+        jf.setLocationRelativeTo(null);
+        jf.setBackground(Color.WHITE);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setVisible(true);
     }
 
     public boolean foundSolution(Stack<Square> theWalkedPath) {
         return theWalkedPath.size() == (BOARD_LEN * BOARD_LEN);
     }
 
+    /**
+     * Squares are ordered based on how many onward moves there are from a square. (The less, the better,)
+     */
+    public class SquareMovesComparator implements Comparator<Square> {
+        @Override
+        public int compare(Square o1, Square o2) {
+            ValidKnightMoves validKnightMoves = new ValidKnightMoves(BOARD_LEN);
+
+            List<Square> square1_onward_moves = validKnightMoves.allPossibleMoves(o1.getX(), o1.getY());
+            List<Square> square2_onward_moves = validKnightMoves.allPossibleMoves(o2.getX(), o2.getY());
+
+            // don't count Backtracking.Square already visited
+
+            square1_onward_moves = square1_onward_moves.stream().filter(element ->
+                    (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
+            square2_onward_moves = square2_onward_moves.stream().filter(element ->
+                    (board[element.getX()][element.getY()] == 0)).collect(Collectors.toList());
+
+            int len1 = square1_onward_moves.size();
+            int len2 = square2_onward_moves.size();
+            return Integer.compare(len1, len2);
+        }
+    }
+
 
     /**
-     * Very simple function which just translates a WalkedPath<Square> to BitStrin (sequence
+     * Very simple function which just translates a WalkedPath<Square> to BitString (sequence
      * of moves coded as BitStrings)
      * Only used for testing purposes in Genetic Algorithm tests
+     *
      * @returns BitString with 63 Valid moves
      */
 
@@ -189,28 +185,28 @@ public final class Search {
         int count = 0;
         for (Square el : cleanedWalkedPath) {
             currentElement = el;
-                int x0 = previousElement.getX();
-                int y0 = previousElement.getY();
-                int x1 = currentElement.getX();
-                int y1 = currentElement.getY();
-                int diffX = x1 - x0;
-                int diffY = y1 - y0;
-                Square differenceSquare = new Square(diffX, diffY);
+            int x0 = previousElement.getX();
+            int y0 = previousElement.getY();
+            int x1 = currentElement.getX();
+            int y1 = currentElement.getY();
+            int diffX = x1 - x0;
+            int diffY = y1 - y0;
+            Square differenceSquare = new Square(diffX, diffY);
                 /*
                 System.out.println(previousElement);
                 System.out.println(currentElement);
                 System.out.println(differenceSquare);
                 System.out.println();
          */
-                StringBuilder binString = new StringBuilder(Integer.toBinaryString(directionsInversed.get(differenceSquare)));
-                while (binString.length() < 3) {
-                    binString.insert(0, "0"); // insert at the beginning
-                }
-                bitStringBuilder.append(binString);
-                previousElement = currentElement;
-                count++;
+            StringBuilder binString = new StringBuilder(Integer.toBinaryString(directionsInversed.get(differenceSquare)));
+            while (binString.length() < 3) {
+                binString.insert(0, "0"); // insert at the beginning
+            }
+            bitStringBuilder.append(binString);
+            previousElement = currentElement;
+            count++;
         }
-        System.out.printf("count = %d%n",count);
+        System.out.printf("count = %d%n", count);
         System.out.printf("BitString Length = %s", bitStringBuilder.toString().length());
         System.out.println();
         System.out.format("Starting Square: %d | %d ", startPosX, startPosY);

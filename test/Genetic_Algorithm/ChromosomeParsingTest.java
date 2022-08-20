@@ -6,7 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class testChromosomeParsing {
+public class ChromosomeParsingTest {
 
     @Test
     public void testChromosmeParsing() {
@@ -17,7 +17,8 @@ public class testChromosomeParsing {
         Individual individual = new Individual();
         individual.setChromosome(validSequence);      // there should be 63 valid moves.
         individual.setStartPosition(0,2);  // starting Square is (0|2)
-        int fitness = individual.FitnessFunction();
-        assertEquals(63, fitness);
+        int actual = individual.FitnessFunction();
+        int expectedFitness = 63;
+        assertEquals(expectedFitness, actual);
     }
 }

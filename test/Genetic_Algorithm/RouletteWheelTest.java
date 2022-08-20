@@ -1,7 +1,6 @@
 package Genetic_Algorithm;
 
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 
 import java.util.Arrays;
@@ -12,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class testRouletteWheelTest {
+public class RouletteWheelTest {
 
     @Test
     public void testsumOfProbabilityIsOne() {

@@ -84,8 +84,8 @@ public final class Individual {
 
     /**
      * simply counts the number of legal move which the genotype represents. (Start Square is not part of the BitString)
-     * Moves, which have been visited are illegal, as well as moves which move off the baord.
-     * moves after an illegal move are not counted.
+     * Moves which have been visited are illegal, as well as moves which move off the board.
+     * Any move following an illegal move is not counted.
      *
      * @return number of legal moves the knight represents
      */
@@ -101,9 +101,9 @@ public final class Individual {
         int[] codes = parseChromosomeToDecimal();
         int count = 0;
         do {
-            Square previousSquare = walkedPath.peek();
-            List<Square> legalMoves = map.get(previousSquare);
-            Square directionalChange = directions.get(codes[count]);
+            final Square previousSquare = walkedPath.peek();
+            final List<Square> legalMoves = map.get(previousSquare);
+            final Square directionalChange = directions.get(codes[count]);
             int offsetX = previousSquare.getX() + directionalChange.getX();
             int offsetY = previousSquare.getY() + directionalChange.getY();
             Square nextSquare = new Square( // simple addition of the corresponding coordinates
@@ -178,8 +178,7 @@ public final class Individual {
      * @return relative Fitness
      */
     public double simpleFitnessFunction() {
-        final double v = (double) IntStream.of(chromosome).sum() / chromosomeLength;
-        return v;
+        return (double) IntStream.of(chromosome).sum() / chromosomeLength;
     }
 
     @Override

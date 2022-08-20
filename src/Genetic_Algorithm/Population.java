@@ -26,7 +26,6 @@ public class Population {
     }
 
 
-
     public Individual getFittestIndividual(int offset) {
         Individual[] sortedIndividuals = Arrays.copyOf(population, population.length);
 

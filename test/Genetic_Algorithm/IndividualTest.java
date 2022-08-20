@@ -22,7 +22,7 @@ public class IndividualTest {
     }
 
     @Test
-    public void testParseChromosomesToDeicmal() {
+    public void testParseChromosomesToDecimal() {
         final String chrom = "100000010100101101110111000010110001100010001110011010110001101000011001110010000001001001101111000010110011101010011000011100000100100101101111101000111101000111000111110101111000011010011111";
         individual.setChromosome(chrom);
 
@@ -41,12 +41,13 @@ public class IndividualTest {
     }
 
     @Test
-    public void testParseChromosomesToDeicmalLongSequence() {
+    public void testParseChromosomesToDecimalLongSequence() {
 
         /*
             0     1    2    3    4    5    6    7
             000, 001, 010, 011, 100, 101, 110, 111
          */
+
         // test Sequence 0->7->5->5->4->3->2 which is the first 21 genes:
         //                    000111101101100011010
         final String chrom = "000111101101100011010100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100100"; //
