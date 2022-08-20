@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 public final class Square implements Comparable<Square> {
     private final int x;

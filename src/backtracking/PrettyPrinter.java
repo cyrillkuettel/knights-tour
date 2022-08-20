@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 /**
  *
  * @author cyrill
@@ -6,7 +6,6 @@ package Backtracking;
 import java.io.PrintStream;
 
 import static java.lang.String.format;
-import static java.lang.System.out;
 
 public final class PrettyPrinter {
 

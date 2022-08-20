@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 import java.util.Iterator;
 import java.util.Map;

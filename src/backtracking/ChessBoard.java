@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;

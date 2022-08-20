@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 import java.util.HashSet;
 import java.util.List;
@@ -6,8 +6,11 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+/**
+ * A collection of useful functions regarding the already visited squares.
+ */
 public final class WalkedPathUtils {
-    // a collection of useful functions regarding the already visited fields
+    //
     /**
      *
      * @param candidates all legal moves from a given Backtracking.Square, without limitations.

@@ -1,9 +1,8 @@
 package Genetic_Algorithm;
 
-import Backtracking.Square;
+import backtracking.Square;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class Population {
 

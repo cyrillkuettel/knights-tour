@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 public class FoundSolutionException extends Exception {
     public FoundSolutionException(String errorMessage) {

@@ -1,8 +1,7 @@
 package Genetic_Algorithm;
 
-import Backtracking.Search;
-import Backtracking.Square;
-import Backtracking.ValidKnightMoves;
+import backtracking.Square;
+import backtracking.ValidKnightMoves;
 
 
 import java.util.*;

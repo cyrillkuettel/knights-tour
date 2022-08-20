@@ -1,6 +1,6 @@
 package Genetic_Algorithm;
 
-import Backtracking.Square;
+import backtracking.Square;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -67,7 +67,8 @@ public final class World {
         if (stackToBeMated.size() % 2  != 0) {
             throw new IllegalArgumentException("Indiviual[] parents has to be of even length");
         }
-        Individual parent1 =
+
+       // Individual parent1 =
         while (!stackToBeMated.isEmpty()) {
             Individual p1 = stackToBeMated.pop();
             Individual p2 = stackToBeMated.pop();

@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 
 import javax.swing.*;
@@ -87,7 +87,6 @@ public final class Search {
             prettyPrinter.print(convertIntArrayToStringArray(board));
             long end = System.currentTimeMillis();
             System.out.format("Total time of computation: %d ms", (end - start));
-            System.out.println(codeWalkedPathToBitString(theWalkedPath));
 
             JFrame jf = new JFrame();
             jf.setSize(700, 700);
@@ -158,7 +157,7 @@ public final class Search {
      * Very simple function which just translates a WalkedPath<Square> to BitStrin (sequence
      * of moves coded as BitStrings)
      * Only used for testing purposes in Genetic Algorithm tests
-     * @return BitString with 63 Valid moves
+     * @returns BitString with 63 Valid moves
      */
 
     public String codeWalkedPathToBitString(Stack<Square> theWalkedPath) {

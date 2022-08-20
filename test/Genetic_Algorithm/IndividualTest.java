@@ -1,12 +1,10 @@
 package Genetic_Algorithm;
 
-import Backtracking.Square;
+import backtracking.Square;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 public final class Point {
     final int x;

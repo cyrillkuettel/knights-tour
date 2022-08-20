@@ -1,16 +1,13 @@
-package Backtracking;
+package backtracking;
 
-import Backtracking.Search;
-import Backtracking.Square;
-import Backtracking.ValidKnightMoves;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
 
 import java.util.*;
 
-import static Backtracking.WalkedPathUtils.filterVisitedSquares;
-import static Backtracking.WalkedPathUtils.hasDuplicates;
+import static backtracking.WalkedPathUtils.filterVisitedSquares;
+import static backtracking.WalkedPathUtils.hasDuplicates;
 
 
 public class SearchTest {

@@ -1,4 +1,4 @@
-package Backtracking;
+package backtracking;
 
 public class demoSearch {
     public static void main(String[] args) throws Exception {

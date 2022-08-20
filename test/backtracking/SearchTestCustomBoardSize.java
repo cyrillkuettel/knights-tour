@@ -1,8 +1,5 @@
-package Backtracking;
+package backtracking;
 
-import Backtracking.Search;
-import Backtracking.Square;
-import Backtracking.ValidKnightMoves;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -10,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static Backtracking.WalkedPathUtils.filterVisitedSquares;
+import static backtracking.WalkedPathUtils.filterVisitedSquares;
 
 public class SearchTestCustomBoardSize {
 
