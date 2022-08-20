@@ -1,3 +1,10 @@
+# The Knight's Tour - Evolutionary vs. Depth-First Search
+Experimenally finding optimal algorithms for constructing knight's tours.  
+Two things to note here:
+- This project is largely based on a short paper: [DOI: 10.1109/CEC.2004.1331065](https://github.com/cyrillkuettel/knights-tour/blob/main/books_and_articles/01331065.pdf)
+- It's still work in progress.
+
+
 # What's knight's tour?
 The knight's tour is series of moves of a chess knight that visits all squares on the board exactly once. It's a classical combinatorics problem. 
 Many algorithms and heuristics have been developed to solve this problem. 
@@ -6,7 +13,7 @@ Many algorithms and heuristics have been developed to solve this problem.
 I implemented depth-first search, with a backtracking approach. I'm currently writing different algorithms to solve the problem of knigh's tour.
 
 The important key insight was:
-For each step, always visit the square with the _minimum number of onward moves_ first. This increases performance tremendously when compared with random selection.
+For each step, always visit the square with the _minimum number of onward moves_ first. This increases performance tremendously when compared with random selection. This is called [Warnsdorff's rule](
  
 This simple priority queue idea has made all the difference, reducing the total runtime from a 10 seconds to 50ms (!)
 
@@ -18,8 +25,7 @@ This simple priority queue idea has made all the difference, reducing the total 
 
 
 
-# TODO
-- Next, I will code a genetic algorithm. The main driving force, let's say _inspiration_, was this [wonderful paper](https://www.iiitb.ac.in/CSL/projects/Chitrakavya/downloads/01331065.pdf) 
+## Toughts
 - For backtracking: Replace List<Square> candidates with a Priority Queue? Might be even faster, because this approach does not need to sort the List.
  However, since the list.length will never exceed 8, it's unlikely to have any significant effect. 
   
